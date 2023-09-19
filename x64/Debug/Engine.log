@@ -1,10 +1,9 @@
-﻿  Vector3.cpp
+﻿  Core.cpp
+C:\Hard Drive\Projects\Engine\Engine\SRC\WorldActor\Core.cpp(5,12): error C2011: 'Core' : redéfinition du type 'class'
+C:\Hard Drive\Projects\Engine\Engine\SRC\WorldActor\Core.hpp(3,7): message : voir la déclaration de 'Core'
+  Vector3.cpp
 c1xx : fatal  error C1083: Impossible d'ouvrir le fichier source : 'MATH\Vector3.cpp' : No such file or directory
-  Application.cpp
-  Core.cpp
-C:\Hard Drive\Projects\Engine\Engine\SRC\GameObject\Core.cpp(4,9): error C2146: erreur de syntaxe : absence de ':' avant l'identificateur 'Vector3'
-C:\Hard Drive\Projects\Engine\Engine\SRC\GameObject\Core.cpp(4,25): error C2238: jetons inattendus avant ';'
-  GameObject.cpp
-C:\Hard Drive\Projects\Engine\Engine\SRC\GameObject\GameObject.cpp(1,10): fatal  error C1083: Impossible d'ouvrir le fichier include : 'Core.h' : No such file or directory
-  World.cpp
+  WorldActor.cpp
+C:\Hard Drive\Projects\Engine\Engine\SRC\WorldActor\WorldActor.cpp(3,18): error C2011: 'WorldActor' : redéfinition du type 'class'
+C:\Hard Drive\Projects\Engine\Engine\SRC\WorldActor\WorldActor.hpp(4,7): message : voir la déclaration de 'WorldActor'
   Génération de code en cours...
