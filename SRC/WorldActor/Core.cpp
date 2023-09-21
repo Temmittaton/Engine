@@ -1,6 +1,7 @@
 #include "Core.hpp"
-#include <Vector3.hpp>
+#include "Vector3.cpp"
 
+// Constructors
 Core::Core () {
 	position = Vector3::zero;
 	scale = Vector3::one;
