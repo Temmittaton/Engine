@@ -1,4 +1,4 @@
-#include <Vector3.hpp>
+#include "../Math/Vector3.hpp"
 
 #ifndef CORE_H
 #define CORE_H

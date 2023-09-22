@@ -1,10 +1,8 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(503,5): warning MSB8004: Le répertoire Output ne se termine pas par une barre oblique finale. Cette instance de build ajoutera une barre oblique, comme requis, pour permettre l'évaluation correcte du répertoire Output.
-  Renderer.cpp
-  Model.cpp
-  Core.cpp
   Application.cpp
-  World.cpp
-  WorldActor.cpp
-Core.obj : error LNK2001: symbole externe non résolu "public: class Quaternion __cdecl Quaternion::operator*(class Quaternion const &)const " (??DQuaternion@@QEBA?AV0@AEBV0@@Z)
-Core.obj : error LNK2001: symbole externe non résolu "public: class Quaternion __cdecl Quaternion::operator*(class Vector3 const &)const " (??DQuaternion@@QEBA?AV0@AEBVVector3@@@Z)
-C:\Hard Drive\Projects\Engine\Engine\Logs\Engine.exe : fatal error LNK1120: 2 externes non résolus
+  Génération de code en cours
+  14 of 17 functions (82.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  Engine.vcxproj -> C:\Hard Drive\Projects\Engine\Engine\Logs\Engine.exe

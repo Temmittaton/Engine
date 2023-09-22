@@ -1,5 +1,5 @@
 #include "Core.hpp"
-#include "Vector3.cpp"
+#include "../Math/Vector3.hpp"
 
 // Constructors
 Core::Core () {
