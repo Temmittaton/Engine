@@ -1,7 +1,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include "Renderer.hpp"
+
+struct ShaderProgramSource {
+    std::string VertexSource;
+    std::string FragmentSource;
+};
 
 // Settings
 void framebuffer_size_callback (GLFWwindow* window, int width, int height);
@@ -13,55 +21,149 @@ const unsigned int SCR_HEIGHT = 600;
 // Constructors
 Renderer::Renderer () {}
 
-void Renderer::OpenWindow () {
-    // glfw: initialize and configure
-    // ------------------------------
-    glfwInit ();
+// Methods
+static ShaderProgramSource ParseShader (const std::string& filepath) {
+    std::ifstream stream (filepath);
+
+    enum class ShaderType {
+        NONE = -1, VERT = 0, FRAG = 1
+    };
+
+    std::string line;
+    std::stringstream ss [2];
+    ShaderType type = ShaderType::NONE;
+    while (getline (stream, line)) {
+        if (line.find ("#shader") != std::string::npos) {
+            if (line.find ("vertex") != std::string::npos) {
+                type = ShaderType::VERT;
+            }
+            else if (line.find ("fragment") != std::string::npos) {
+                type = ShaderType::FRAG;
+            }
+        }
+        else {
+            ss [(int)type] << line << '\n';
+        }
+    }
+
+    return {ss [0].str (), ss [1].str ()};
+}
+
+static unsigned int CompileShader (unsigned int type, const std::string& source) {
+    unsigned int id = glCreateShader (type);
+    const char* src = source.c_str ();
+    glShaderSource (id, 1, &src, nullptr);
+    glCompileShader (id);
+
+    int result;
+    glGetShaderiv (id, GL_COMPILE_STATUS, &result);
+    if (result == GL_FALSE) {
+        int length;
+        glGetShaderiv (id, GL_INFO_LOG_LENGTH, &length);
+        char* message = (char*)alloca (length * sizeof (char));
+        glGetShaderInfoLog (id, length, &length, message);
+        std::cout << "Failed to compile shader !" << std::endl;
+        std::cout << message << std::endl;
+        glDeleteShader (id);
+
+        return 0;
+    }
+
+    return id;
+}
+
+static unsigned int CreateShader (const std::string& vertexShader, const std::string& fragmentShader) {
+    unsigned int program = glCreateProgram ();
+    unsigned int vs = CompileShader (GL_VERTEX_SHADER, vertexShader);
+    unsigned int fs = CompileShader (GL_FRAGMENT_SHADER, fragmentShader);
+
+    glAttachShader (program, vs);
+    glAttachShader (program, fs);
+    glLinkProgram (program);
+    glValidateProgram (program);
+
+    glDeleteShader (vs);
+    glDeleteShader (fs);
+
+    return program;
+}
+
+void Renderer::RenderFrame () {
+    // Initialize GLFW
+    if (!glfwInit ()) {
+        std::cerr << "GLFW initialization failed" << std::endl;
+    }
+
+    // Configure GLFW
     glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#ifdef __APPLE__
-    glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    // glfw window creation
-    // --------------------
-    window = glfwCreateWindow (SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
+    // Create a GLFW window
+    GLFWwindow* window = glfwCreateWindow (SCR_WIDTH, SCR_HEIGHT, "Fullscreen Shader", nullptr, nullptr);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate ();
     }
+
+    // Make the OpenGL context current
     glfwMakeContextCurrent (window);
-    glfwSetFramebufferSizeCallback (window, framebuffer_size_callback);
 
-    // render loop
-    // -----------
+    // Initialize GLEW
+    if (glewInit () != GLEW_OK) {
+        std::cerr << "GLEW initialization failed" << std::endl;
+        glfwTerminate ();
+    }
+
+    // Vertex data for a full-screen quad
+    float vertices [] = {
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+         1.0f,  1.0f, 0.0f, 1.0f, 1.0f
+    };
+
+    unsigned int VBO, VAO;
+    glGenVertexArrays (1, &VAO);
+    glGenBuffers (1, &VBO);
+
+    glBindVertexArray (VAO);
+    glBindBuffer (GL_ARRAY_BUFFER, VBO);
+    glBufferData (GL_ARRAY_BUFFER, sizeof (vertices), vertices, GL_STATIC_DRAW);
+
+    // Specify the vertex attributes
+    glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)0);
+    glEnableVertexAttribArray (0);
+
+    glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
+    glEnableVertexAttribArray (1);
+
+    // Compile and link the shaders
+    ShaderProgramSource source = ParseShader ("SRC/Render/Shaders/baseShader.shader");
+
+    unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
+
     while (!glfwWindowShouldClose (window)) {
-        // input
-        // -----
-        processInput (window);
+        // Render loop
 
-        // render
-        // ------
-        glClearColor (0.2f, 0.3f, 0.3f, 1.0f);
-        glClear (GL_COLOR_BUFFER_BIT);
+        // Use the shader program
+        glUseProgram (shader);
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
+        // Render the full-screen quad
+        glBindVertexArray (VAO);
+        glDrawArrays (GL_TRIANGLE_STRIP, 0, 4);
+
+        // Swap buffers and poll events
         glfwSwapBuffers (window);
         glfwPollEvents ();
     }
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
+    // Cleanup
+    glDeleteVertexArrays (1, &VAO);
+    glDeleteBuffers (1, &VBO);
+    glDeleteProgram (shader);
+
     glfwTerminate ();
-}
-
-void Renderer::RenderFrame () {
-    OpenWindow ();
-
-
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly

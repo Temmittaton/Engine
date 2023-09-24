@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SRC\WorldActor\Camera.cpp" />
     <ClCompile Include="SRC\Math\Quaternion.cpp" />
     <ClCompile Include="SRC\Render\Renderer.cpp" />
     <ClCompile Include="SRC\WorldActor\Model.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="SRC\Math\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SRC\WorldActor\Camera.hpp" />
     <ClInclude Include="SRC\Math\Quaternion.h" />
     <ClInclude Include="SRC\Render\Renderer.hpp" />
     <ClInclude Include="SRC\WorldActor\Model.hpp" />
@@ -170,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\Render\baseVertexShader.glsl" />
+    <None Include="SRC\Render\Shaders\baseShader.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

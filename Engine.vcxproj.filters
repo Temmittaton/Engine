@@ -39,6 +39,9 @@
     <ClCompile Include="SRC\Math\Vector3.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="SRC\WorldActor\Camera.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SRC\WorldActor\Core.hpp">
@@ -59,8 +62,12 @@
     <ClInclude Include="SRC\Math\Vector3.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="SRC\WorldActor\Camera.hpp">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\Render\baseVertexShader.glsl" />
+    <None Include="SRC\Render\Shaders\baseShader.shader" />
   </ItemGroup>
 </Project>

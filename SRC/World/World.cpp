@@ -1,5 +1,1 @@
-
-class  World {
-public :
-
-};
+#include "World.h"

@@ -8,7 +8,6 @@ public :
 	// Constructors
 	Renderer ();
 
-	void OpenWindow ();
 	void RenderFrame ();
 };
 
