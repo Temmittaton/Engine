@@ -72,15 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)Logs</OutDir>
+    <IncludePath>$(ProjectDir)Dependencies</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Logs</OutDir>
+    <IncludePath>$(ProjectDir)Dependencies</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)Logs</OutDir>
+    <IncludePath>$(ProjectDir)Dependencies</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Logs</OutDir>
+    <IncludePath>$(ProjectDir)Dependencies</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -157,11 +161,12 @@
     <ClCompile Include="SRC\WorldActor\Model.cpp" />
     <ClCompile Include="SRC\WorldActor\Core.cpp" />
     <ClCompile Include="SRC\Application.cpp" />
-    <ClCompile Include="SRC\World\World.cpp" />
     <ClCompile Include="SRC\WorldActor\WorldActor.cpp" />
     <ClCompile Include="SRC\Math\Vector3.cpp" />
+    <ClCompile Include="SRC\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Users\demet\Downloads\tinyobjloader-release\tiny_obj_loader.h" />
     <ClInclude Include="SRC\WorldActor\Camera.hpp" />
     <ClInclude Include="SRC\Math\Quaternion.h" />
     <ClInclude Include="SRC\Render\Renderer.hpp" />
@@ -169,6 +174,7 @@
     <ClInclude Include="SRC\WorldActor\Core.hpp" />
     <ClInclude Include="SRC\WorldActor\WorldActor.hpp" />
     <ClInclude Include="SRC\Math\Vector3.hpp" />
+    <ClInclude Include="SRC\World\World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\Render\baseVertexShader.glsl" />

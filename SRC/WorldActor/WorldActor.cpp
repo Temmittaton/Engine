@@ -16,6 +16,13 @@ WorldActor::WorldActor (WorldActor* iparent) {
 }
 
 // Methods
+WorldActor* WorldActor::GetParent () {
+	return parent;
+}
+void WorldActor::AddChild (WorldActor* child) {
+
+}
+
 void WorldActor::Move (Vector3 movement) {
 
 }
