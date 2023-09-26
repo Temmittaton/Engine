@@ -1,7 +1,7 @@
 #include "WorldActor.hpp"
 
 #pragma once
-class Camera : WorldActor {
+class Camera : public WorldActor {
 public :
 	// Attributes
 	int fov = 90;

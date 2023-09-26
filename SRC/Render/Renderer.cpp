@@ -15,8 +15,8 @@ struct ShaderProgramSource {
 void framebuffer_size_callback (GLFWwindow* window, int width, int height);
 void processInput (GLFWwindow* window);
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 
 // Constructors
 Renderer::Renderer () {}
@@ -144,10 +144,12 @@ void Renderer::RenderFrame () {
     unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
 
     while (!glfwWindowShouldClose (window)) {
-        // Render loop
+        // Set shader variables
+        int uniform_WindowSize = glGetUniformLocation (shader, "_WindowDimensions");
 
         // Use the shader program
         glUseProgram (shader);
+        glUniform2f (uniform_WindowSize, SCR_WIDTH, SCR_HEIGHT);
 
         // Render the full-screen quad
         glBindVertexArray (VAO);
@@ -178,5 +180,7 @@ void processInput (GLFWwindow* window) {
 void framebuffer_size_callback (GLFWwindow* window, int width, int height) {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
+    SCR_HEIGHT = height;
+    SCR_WIDTH = width;
     glViewport (0, 0, width, height);
 }

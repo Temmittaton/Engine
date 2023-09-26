@@ -1,5 +1,4 @@
 #include <vector>
-#include "../Math/tiny_obj_loader.h"
 #include "../Math/Vector3.hpp"
 
 #pragma once

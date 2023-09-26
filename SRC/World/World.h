@@ -5,7 +5,7 @@
 class World {
 public :
 	// Attributes
-	Camera mainCamera;
+	WorldActor mainCamera;
 	WorldActor* worldActors [];
 
 	// Constructors

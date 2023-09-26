@@ -3,7 +3,8 @@
 
 // Constructors
 World::World () {
-	mainCamera = Camera ();
+	mainCamera = (WorldActor)Camera ();
+	mainCamera.core.position = Vector3 (0, 0, -5);
 	worldActors [8];
 
 	WorldActor sphere = WorldActor::CreateSphere ();
