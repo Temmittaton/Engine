@@ -25,5 +25,7 @@ public :
 		WorldActor sphere = WorldActor ();
 		sphere.model = Model ();
 		sphere.model.mesh = {true, radius};
+
+		return sphere;
 	}
 };
