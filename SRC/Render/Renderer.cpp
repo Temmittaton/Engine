@@ -15,8 +15,8 @@ struct ShaderProgramSource {
 void framebuffer_size_callback (GLFWwindow* window, int width, int height);
 void processInput (GLFWwindow* window);
 
-unsigned int SCR_WIDTH = 800;
-unsigned int SCR_HEIGHT = 600;
+int SCR_WIDTH = 960;
+int SCR_HEIGHT = 540;
 
 // Constructors
 Renderer::Renderer () {}
@@ -88,8 +88,21 @@ static unsigned int CreateShader (const std::string& vertexShader, const std::st
 
     return program;
 }
+void UpdateQuadVertices (float* vertices, int windowWidth, int windowHeight) {
+    float halfWidth = windowWidth / 2.0f;
+    float halfHeight = windowHeight / 2.0f;
 
-void Renderer::RenderFrame () {
+    vertices [0] = -halfWidth;
+    vertices [1] = -halfHeight;
+    vertices [5] = halfWidth;
+    vertices [6] = -halfHeight;
+    vertices [10] = -halfWidth;
+    vertices [11] = halfHeight;
+    vertices [15] = halfWidth;
+    vertices [16] = halfHeight;
+}
+
+void Renderer::RenderInit () {
     // Initialize GLFW
     if (!glfwInit ()) {
         std::cerr << "GLFW initialization failed" << std::endl;
@@ -101,7 +114,7 @@ void Renderer::RenderFrame () {
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a GLFW window
-    GLFWwindow* window = glfwCreateWindow (SCR_WIDTH, SCR_HEIGHT, "Fullscreen Shader", nullptr, nullptr);
+    window = glfwCreateWindow (SCR_WIDTH, SCR_HEIGHT, "Fullscreen Shader", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate ();
@@ -116,21 +129,22 @@ void Renderer::RenderFrame () {
         glfwTerminate ();
     }
 
-    // Vertex data for a full-screen quad
-    float vertices [] = {
-        /*bl*/-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        /*br*/ 1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        /*tl*/-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
-        /*tr*/ 1.0f,  1.0f, 0.0f, 0.0f, 0.0f
-    };
+    // Calculate vertices for the centered and resized quad
+    quad [0] = -SCR_WIDTH / 2;
+    quad [5] = SCR_WIDTH / 2;
+    quad [10] = -SCR_WIDTH / 2;
+    quad [15] = SCR_WIDTH / 2;
+    quad [1] = -SCR_HEIGHT / 2;
+    quad [6] = -SCR_HEIGHT / 2;
+    quad [11] = SCR_HEIGHT / 2;
+    quad [16] = SCR_HEIGHT / 2;
 
-    unsigned int VBO, VAO;
     glGenVertexArrays (1, &VAO);
     glGenBuffers (1, &VBO);
 
     glBindVertexArray (VAO);
     glBindBuffer (GL_ARRAY_BUFFER, VBO);
-    glBufferData (GL_ARRAY_BUFFER, sizeof (vertices), vertices, GL_STATIC_DRAW);
+    glBufferData (GL_ARRAY_BUFFER, sizeof (quad), quad, GL_STATIC_DRAW);
 
     // Specify the vertex attributes
     glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)0);
@@ -143,8 +157,13 @@ void Renderer::RenderFrame () {
     ShaderProgramSource source = ParseShader ("SRC/Render/Shaders/baseShader.shader");
 
     unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
+}
 
+void Renderer::RenderFrame () {
     while (!glfwWindowShouldClose (window)) {
+        // Get the window size
+        glfwGetWindowSize (window, &SCR_WIDTH, &SCR_HEIGHT);
+
         // Set shader variables
         int uniform_WindowSize = glGetUniformLocation (shader, "_WindowDimensions");
         int uniform_Camera = glGetUniformLocation (shader, "_Camera");
@@ -152,6 +171,12 @@ void Renderer::RenderFrame () {
         // Use the shader program
         glUseProgram (shader);
         glUniform2f (uniform_WindowSize, SCR_WIDTH, SCR_HEIGHT);
+
+        // Update quad
+        UpdateQuadVertices (quad, SCR_WIDTH, SCR_HEIGHT);
+        glBindVertexArray (VAO);
+        glBindBuffer (GL_ARRAY_BUFFER, VBO);
+        glBufferData (GL_ARRAY_BUFFER, sizeof (quad), quad, GL_STATIC_DRAW);
 
         // Render the full-screen quad
         glBindVertexArray (VAO);

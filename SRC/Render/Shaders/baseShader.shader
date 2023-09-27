@@ -11,6 +11,13 @@ void main () {
 #version 330 core
 
 // Structs
+struct HitInfo {
+	bool didHit;
+	float dist;
+	vec3 hitPoint;
+	vec3 normal;
+};
+
 struct Camera {
 	vec3 pos;
 	vec3 forward;
@@ -31,5 +38,5 @@ uniform Camera _Camera;
 void main () {
 	vec2 uv = 2 * vec2(gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 	
-	color = vec4 (1, 1, 1, 1);
+	color = vec4 (uv.x, uv.y, 0, 1);
 };

@@ -1,13 +1,15 @@
 #pragma once
 
 class Renderer {
-private :
+public:
 	GLFWwindow* window;
+	float quad [20];
+	unsigned int shader, VBO, VAO;
 
-public :
 	// Constructors
 	Renderer ();
 
+	void RenderInit ();
 	void RenderFrame ();
 };
 

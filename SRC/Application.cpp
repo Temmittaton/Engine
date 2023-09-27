@@ -8,6 +8,7 @@ static Renderer renderer = Renderer ();
 static World world = World ();
 
 int main (void) {
+    renderer.RenderInit ();
 
     renderer.RenderFrame ();
 
