@@ -21,12 +21,15 @@ struct Sphere {
 	float rad;
 };
 
+// Inout Variables
 layout (pixel_center_integer) in vec4 gl_FragCoord;
 layout (location = 0) out vec4 color;
+// Variables
 uniform vec2 _WindowDimensions;
+uniform Camera _Camera;
 
 void main () {
 	vec2 uv = 2 * vec2(gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 	
-	color = vec4 (uv.x, uv.y, 0, 1);
+	color = vec4 (1, 1, 1, 1);
 };

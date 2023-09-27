@@ -33,6 +33,9 @@ static ShaderProgramSource ParseShader (const std::string& filepath) {
     std::stringstream ss [2];
     ShaderType type = ShaderType::NONE;
     while (getline (stream, line)) {
+        /*if (&line [0] == "/") {
+            continue;
+        }*/
         if (line.find ("#shader") != std::string::npos) {
             if (line.find ("vertex") != std::string::npos) {
                 type = ShaderType::VERT;
@@ -48,7 +51,6 @@ static ShaderProgramSource ParseShader (const std::string& filepath) {
 
     return {ss [0].str (), ss [1].str ()};
 }
-
 static unsigned int CompileShader (unsigned int type, const std::string& source) {
     unsigned int id = glCreateShader (type);
     const char* src = source.c_str ();
@@ -71,7 +73,6 @@ static unsigned int CompileShader (unsigned int type, const std::string& source)
 
     return id;
 }
-
 static unsigned int CreateShader (const std::string& vertexShader, const std::string& fragmentShader) {
     unsigned int program = glCreateProgram ();
     unsigned int vs = CompileShader (GL_VERTEX_SHADER, vertexShader);
@@ -117,10 +118,10 @@ void Renderer::RenderFrame () {
 
     // Vertex data for a full-screen quad
     float vertices [] = {
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-         1.0f,  1.0f, 0.0f, 1.0f, 1.0f
+        /*bl*/-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        /*br*/ 1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        /*tl*/-1.0f,  1.0f, 0.0f, 0.0f, 0.0f,
+        /*tr*/ 1.0f,  1.0f, 0.0f, 0.0f, 0.0f
     };
 
     unsigned int VBO, VAO;
@@ -146,6 +147,7 @@ void Renderer::RenderFrame () {
     while (!glfwWindowShouldClose (window)) {
         // Set shader variables
         int uniform_WindowSize = glGetUniformLocation (shader, "_WindowDimensions");
+        int uniform_Camera = glGetUniformLocation (shader, "_Camera");
 
         // Use the shader program
         glUseProgram (shader);
