@@ -24,7 +24,7 @@ public :
 	static WorldActor CreateSphere (float radius = 1) {
 		WorldActor sphere = WorldActor ();
 		sphere.model = Model ();
-		sphere.model.mesh = {true, radius};
+		sphere.model.mesh = {true, false, radius, Vector3 (1, 1, 1)};
 
 		return sphere;
 	}

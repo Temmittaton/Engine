@@ -19,7 +19,6 @@ int SCR_WIDTH = 960;
 int SCR_HEIGHT = 540;
 
 // Constructors
-Renderer::Renderer () {}
 
 // Methods
 static ShaderProgramSource ParseShader (const std::string& filepath) {
@@ -152,14 +151,13 @@ void Renderer::RenderInit () {
 
     glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
     glEnableVertexAttribArray (1);
-
+}
+void Renderer::RenderFrame (World* world) {
     // Compile and link the shaders
     ShaderProgramSource source = ParseShader ("SRC/Render/Shaders/baseShader.shader");
 
     unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
-}
 
-void Renderer::RenderFrame () {
     while (!glfwWindowShouldClose (window)) {
         // Get the window size
         glfwGetWindowSize (window, &SCR_WIDTH, &SCR_HEIGHT);
@@ -167,6 +165,22 @@ void Renderer::RenderFrame () {
         // Set shader variables
         int uniform_WindowSize = glGetUniformLocation (shader, "_WindowDimensions");
         int uniform_Camera = glGetUniformLocation (shader, "_Camera");
+
+        // SSBOs for WorldActors and Lights
+        unsigned int wSSBO, lSSBO;
+        Mesh* wArray = world->GetSceneActors ();
+        Light* lArray = world->GetLights ();
+        glGenBuffers (1, &wSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, wSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (wArray), wArray, GL_STATIC_READ);
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 3, wSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
+
+        glGenBuffers (1, &lSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, lSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (lArray), lArray, GL_STATIC_READ);
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, lSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         // Use the shader program
         glUseProgram (shader);

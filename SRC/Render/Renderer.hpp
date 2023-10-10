@@ -1,3 +1,5 @@
+#include "../World/World.h"
+
 #pragma once
 
 class Renderer {
@@ -7,9 +9,9 @@ public:
 	unsigned int shader, VBO, VAO;
 
 	// Constructors
-	Renderer ();
+	Renderer () {};
 
 	void RenderInit ();
-	void RenderFrame ();
+	void RenderFrame (World* world);
 };
 

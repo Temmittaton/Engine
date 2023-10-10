@@ -12,5 +12,6 @@ public :
 	World ();
 
 	// Methods
-
+	Mesh* GetSceneActors ();
+	Light* GetLights ();
 };

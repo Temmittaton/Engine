@@ -10,7 +10,7 @@ static World world = World ();
 int main (void) {
     renderer.RenderInit ();
 
-    renderer.RenderFrame ();
+    renderer.RenderFrame (&world);
 
     return 0;
 }
