@@ -1,63 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.9.34723.18
+VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{E8BDFAD8-F55B-447B-84EB-749BD767DD1D}"
-	ProjectSection(SolutionItems) = preProject
-		SRC\Application.cpp = SRC\Application.cpp
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maths", "Maths", "{D65AA5E1-D5E3-4E48-9384-26EADD904B8B}"
-	ProjectSection(SolutionItems) = preProject
-		SRC\Math\Quaternion.cpp = SRC\Math\Quaternion.cpp
-		SRC\Math\Quaternion.h = SRC\Math\Quaternion.h
-		SRC\Math\Vector3.cpp = SRC\Math\Vector3.cpp
-		SRC\Math\Vector3.hpp = SRC\Math\Vector3.hpp
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Render", "Render", "{5228C1CA-E581-485E-8729-2FF69959DD8B}"
-	ProjectSection(SolutionItems) = preProject
-		SRC\Render\baseVertexShader.glsl = SRC\Render\baseVertexShader.glsl
-		SRC\Render\Renderer.hpp = SRC\Render\Renderer.hpp
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{B2B43F16-B209-46DB-81CB-C422AA4ED1AB}"
-	ProjectSection(SolutionItems) = preProject
-		SRC\Render\Shaders\baseShader.shader = SRC\Render\Shaders\baseShader.shader
-		SRC\Render\Renderer.cpp = SRC\Render\Renderer.cpp
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "World", "World", "{840DCF48-8649-4FD6-9D4A-01BE5175FF1A}"
-	ProjectSection(SolutionItems) = preProject
-		SRC\World\World.cpp = SRC\World\World.cpp
-		SRC\World\World.h = SRC\World\World.h
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WorldActor", "WorldActor", "{59034712-7963-4472-95E2-F7D30E7AF842}"
-	ProjectSection(SolutionItems) = preProject
-		SRC\WorldActor\Camera.cpp = SRC\WorldActor\Camera.cpp
-		SRC\WorldActor\Camera.hpp = SRC\WorldActor\Camera.hpp
-		SRC\WorldActor\Core.cpp = SRC\WorldActor\Core.cpp
-		SRC\WorldActor\Core.hpp = SRC\WorldActor\Core.hpp
-		SRC\WorldActor\Model.cpp = SRC\WorldActor\Model.cpp
-		SRC\WorldActor\Model.hpp = SRC\WorldActor\Model.hpp
-		SRC\WorldActor\WorldActor.cpp = SRC\WorldActor\WorldActor.cpp
-		SRC\WorldActor\WorldActor.hpp = SRC\WorldActor\WorldActor.hpp
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine.vcxproj", "{F73559A9-878D-475B-AF6E-41E13478BC6D}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Debug|x64.ActiveCfg = Debug|x64
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Debug|x64.Build.0 = Debug|x64
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Debug|x86.ActiveCfg = Debug|Win32
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Debug|x86.Build.0 = Debug|Win32
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Release|x64.ActiveCfg = Release|x64
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Release|x64.Build.0 = Release|x64
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Release|x86.ActiveCfg = Release|Win32
+		{F73559A9-878D-475B-AF6E-41E13478BC6D}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D65AA5E1-D5E3-4E48-9384-26EADD904B8B} = {E8BDFAD8-F55B-447B-84EB-749BD767DD1D}
-		{5228C1CA-E581-485E-8729-2FF69959DD8B} = {E8BDFAD8-F55B-447B-84EB-749BD767DD1D}
-		{B2B43F16-B209-46DB-81CB-C422AA4ED1AB} = {5228C1CA-E581-485E-8729-2FF69959DD8B}
-		{840DCF48-8649-4FD6-9D4A-01BE5175FF1A} = {E8BDFAD8-F55B-447B-84EB-749BD767DD1D}
-		{59034712-7963-4472-95E2-F7D30E7AF842} = {E8BDFAD8-F55B-447B-84EB-749BD767DD1D}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F0B41692-9ED8-4ECB-B66F-61A2851491E4}
+		SolutionGuid = {BC727276-BD10-48B5-BC0F-C540267A3AFE}
 	EndGlobalSection
 EndGlobal

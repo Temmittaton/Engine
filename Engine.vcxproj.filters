@@ -13,67 +13,83 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers sources\Render">
+      <UniqueIdentifier>{03c9e485-d625-4993-9de4-3ced720a5975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Render\Shaders">
+      <UniqueIdentifier>{f1827763-bec7-43a4-bbec-6ca54224f27d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Maths">
+      <UniqueIdentifier>{60b369ab-edad-49c9-881b-b0b27b4b10ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\World">
+      <UniqueIdentifier>{d0b01521-6640-413a-9c66-7e7584c00988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\WorldActor">
+      <UniqueIdentifier>{d02c0d59-7267-45e8-85ce-6dfdfbd1171a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRC\Application.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="SRC\WorldActor\Core.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SRC\WorldActor\WorldActor.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SRC\WorldActor\Model.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="SRC\Render\Renderer.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Render</Filter>
     </ClCompile>
     <ClCompile Include="SRC\Math\Quaternion.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Maths</Filter>
     </ClCompile>
     <ClCompile Include="SRC\Math\Vector3.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SRC\WorldActor\Camera.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\Maths</Filter>
     </ClCompile>
     <ClCompile Include="SRC\World\World.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>Fichiers sources\World</Filter>
+    </ClCompile>
+    <ClCompile Include="SRC\WorldActor\Camera.cpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClCompile>
+    <ClCompile Include="SRC\WorldActor\Core.cpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClCompile>
+    <ClCompile Include="SRC\WorldActor\Model.cpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClCompile>
+    <ClCompile Include="SRC\WorldActor\WorldActor.cpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SRC\WorldActor\Core.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\WorldActor\WorldActor.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\WorldActor\Model.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\Render\Renderer.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\Math\Quaternion.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\Math\Vector3.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\WorldActor\Camera.hpp">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\World\World.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Users\demet\Downloads\tinyobjloader-release\tiny_obj_loader.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
+    <None Include="SRC\Render\Shaders\baseShader.shader">
+      <Filter>Fichiers sources\Render\Shaders</Filter>
+    </None>
+    <None Include="SRC\Render\baseVertexShader.glsl">
+      <Filter>Fichiers sources\Render</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SRC\Render\baseVertexShader.glsl" />
-    <None Include="SRC\Render\Shaders\baseShader.shader" />
+    <ClInclude Include="SRC\Render\Renderer.hpp">
+      <Filter>Fichiers sources\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\Math\Quaternion.h">
+      <Filter>Fichiers sources\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\Math\Vector3.hpp">
+      <Filter>Fichiers sources\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\World\World.h">
+      <Filter>Fichiers sources\World</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\WorldActor\Camera.hpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\WorldActor\Core.hpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\WorldActor\Model.hpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\WorldActor\WorldActor.hpp">
+      <Filter>Fichiers sources\WorldActor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
