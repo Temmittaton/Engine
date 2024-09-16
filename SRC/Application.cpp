@@ -5,7 +5,7 @@
 #include "World/World.h"
 
 static Renderer renderer = Renderer ();
-static World world = World ();
+static World world = World (Vector3 (64), 16, 16);
 
 int main (void) {
     renderer.RenderInit ();

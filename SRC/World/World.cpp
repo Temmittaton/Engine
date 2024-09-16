@@ -2,16 +2,23 @@
 #include "../WorldActor/WorldActor.hpp"
 
 // Constructors
-World::World () {
-	mainCamera = (WorldActor)Camera ();
-	mainCamera.core.position = Vector3 (0, 0, -5);
+World::World (Vector3 worldSize, unsigned int chunkSize, unsigned int averageDensity) {
+	// Setting up worldActors array, chunks
+	worldDimensions = worldSize;
+	chunksDimensions = chunkSize;
+	chunkLength = averageDensity;
+
+
+
+	mainCamera = &(WorldActor)Camera ();
+	(*mainCamera).core.position = Vector3 (0, 0, -5);
 	worldActors [8];
 
 	WorldActor sphere = WorldActor::CreateSphere ();
 	worldActors [0] = &sphere;
 }
 
-Mesh* World::GetSceneActors () {
+Mesh* World::GetSceneActors () const {
 	unsigned int n = 0;
 	while (worldActors [n] != NULL) {
 		n++;

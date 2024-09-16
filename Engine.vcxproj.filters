@@ -57,6 +57,9 @@
     <ClCompile Include="SRC\WorldActor\WorldActor.cpp">
       <Filter>Fichiers sources\WorldActor</Filter>
     </ClCompile>
+    <ClCompile Include="SRC\Math\Vector2.cpp">
+      <Filter>Fichiers sources\Maths</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\Render\Shaders\baseShader.shader">
@@ -90,6 +93,9 @@
     </ClInclude>
     <ClInclude Include="SRC\WorldActor\WorldActor.hpp">
       <Filter>Fichiers sources\WorldActor</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\Math\Vector2.hpp">
+      <Filter>Fichiers sources\Maths</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

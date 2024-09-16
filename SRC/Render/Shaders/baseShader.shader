@@ -68,7 +68,7 @@ Ray mirror (Ray ray, vec3 normal, vec3 origin) {
 }
 
 vec4 GetEnvironmentLight (Ray ray) {
-	float skyGradientT = smoothstep (0, 0.4, ray.dir.y);
+	float skyGradientT = smoothstep (0.0, 0.4, ray.dir.y);
 	vec4 skyGradient = mix (SkyColorHorizon, SkyColorZenith, skyGradientT);
 	// To make
 

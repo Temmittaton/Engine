@@ -5,13 +5,15 @@
 class World {
 public :
 	// Attributes
-	WorldActor mainCamera;
+	Vector3 worldDimensions;
+	unsigned int chunksDimensions, chunkLength;
+	WorldActor* mainCamera;
 	WorldActor* worldActors [];
 
 	// Constructors
-	World ();
+	World (Vector3 worldSize, unsigned int chunkSize, unsigned int averageDensity);
 
 	// Methods
-	Mesh* GetSceneActors ();
+	Mesh* GetSceneActors () const;
 	Light* GetLights ();
 };
