@@ -11,18 +11,18 @@ public :
 	WorldActor* children [8];
 
 	// Constructors
-	WorldActor ();
-	WorldActor (Vector3 position);
-	WorldActor (Core icore);
-	WorldActor (WorldActor* iparent);
+	WorldActor (World &world);
+	WorldActor (World& world, Vector3 position);
+	WorldActor (World& world, Core icore);
+	WorldActor (World& world, WorldActor* iparent);
 
 	// Methods
 	void AddChild (WorldActor* child);
 	WorldActor* GetParent ();
 	void Move (Vector3 movement);
 
-	static WorldActor CreateSphere (float radius = 1) {
-		WorldActor sphere = WorldActor ();
+	static WorldActor CreateSphere (World& world, float radius = 1) {
+		WorldActor sphere = WorldActor (world);
 		sphere.model = Model ();
 		sphere.model.mesh = {true, false, radius, Vector3 (1, 1, 1)};
 

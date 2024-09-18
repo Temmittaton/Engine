@@ -1,3 +1,4 @@
+#include <vector>
 #include "../WorldActor/Camera.hpp"
 #include "../WorldActor/WorldActor.hpp"
 
@@ -5,15 +6,17 @@
 class World {
 public :
 	// Attributes
-	Vector3 worldDimensions;
+	Vector3 worldDimensions, chunkNumber;
 	unsigned int chunksDimensions, chunkLength;
 	WorldActor* mainCamera;
-	WorldActor* worldActors [];
+	std::vector<std::vector<WorldActor*>> worldActors;
+	Vector3 worldSkyColor;
 
 	// Constructors
-	World (Vector3 worldSize, unsigned int chunkSize, unsigned int averageDensity);
+	World (Vector3 worldSize, unsigned int chunkSize, Vector3 skyColor);
 
 	// Methods
 	Mesh* GetSceneActors () const;
-	Light* GetLights ();
+	struct LightInfo GetLights ();
+	struct ID AddWorldActor (WorldActor* instance, Vector3 pos);
 };

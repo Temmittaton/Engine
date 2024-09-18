@@ -1,5 +1,8 @@
 #include "Camera.hpp"
+#include "../World/World.h"
 
-Camera::Camera () {
+Camera::Camera (World &world) {
 	core = Core ();
+
+
 };

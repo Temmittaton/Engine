@@ -40,6 +40,7 @@ public:
 	static float dotProduct (const Vector3& left, const Vector3& right);
 	static Vector3 crossProduct (const Vector3& left, const Vector3& right);
 	float angleBetweenVectors (const Vector3& otherVector) const;
+	Vector3 toInt3 () const;
 	/**
 	 * @brief      Rotate this vector using another vector as rotation axis.
 	 *

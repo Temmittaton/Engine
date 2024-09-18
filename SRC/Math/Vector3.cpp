@@ -105,6 +105,10 @@ float Vector3::angleBetweenVectors (const Vector3& otherVector) const {
 	);
 }
 
+Vector3 Vector3::toInt3 () const {
+	return Vector3 ((int)data[0], (int)data [1], (int)data [2]);
+}
+
 void Vector3::rotateArroundVector (const Vector3& v, float rotation) {
 	const Quaternion rotationInQuaternionSpace (v, rotation);
 	// Apply rotation

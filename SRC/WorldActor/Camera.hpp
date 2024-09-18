@@ -7,5 +7,5 @@ public :
 	int fov = 90;
 
 	// Constructors
-	Camera ();
+	Camera (World& world);
 };
