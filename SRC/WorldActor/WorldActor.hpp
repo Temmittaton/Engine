@@ -20,12 +20,4 @@ public :
 	void AddChild (WorldActor* child);
 	WorldActor* GetParent ();
 	void Move (Vector3 movement);
-
-	static WorldActor CreateSphere (World& world, float radius = 1) {
-		WorldActor sphere = WorldActor (world);
-		sphere.model = Model ();
-		sphere.model.mesh = {true, false, radius, Vector3 (1, 1, 1)};
-
-		return sphere;
-	}
 };

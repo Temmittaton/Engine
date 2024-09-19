@@ -5,13 +5,10 @@
 Model::Model () {
 	mesh = {false, false, 0, {Vector3 (1, 1, 1)}};
 }
-Model::Model (bool isSphere, bool isLight, float radiusORintensity, Vector3 color) {
-	if (isSphere) {
-		mesh = {true, false, radiusORintensity, {color}};
-	}
-	else if (isLight) {
+Model::Model (bool isLight, float intensity, Vector3 color) {
+	if (isLight) {
 		mesh = {false, true, 0, {Vector3 (0, 0, 0)}};
-		light = {radiusORintensity, color};
+		mesh.material.light = {intensity, color};
 	}
 }
 

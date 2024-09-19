@@ -3,6 +3,11 @@
 #include "../WorldActor/WorldActor.hpp"
 
 #pragma once
+
+struct Scene {
+	Model
+};
+
 class World {
 public :
 	// Attributes
@@ -16,7 +21,6 @@ public :
 	World (Vector3 worldSize, unsigned int chunkSize, Vector3 skyColor);
 
 	// Methods
-	Mesh* GetSceneActors () const;
-	struct LightInfo GetLights ();
+	struct Scene GetSceneToRender () const;
 	struct ID AddWorldActor (WorldActor* instance, Vector3 pos);
 };

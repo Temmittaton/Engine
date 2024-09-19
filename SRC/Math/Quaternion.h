@@ -116,6 +116,9 @@ public:
 	float i = 0;
 	float j = 0;
 	float k = 0;
+
+	// Constants
+	static const Quaternion identity;
 private:
 };
 

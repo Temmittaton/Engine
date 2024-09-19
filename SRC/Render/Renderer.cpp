@@ -168,17 +168,16 @@ void Renderer::RenderFrame (World* world) {
 
         // SSBOs for WorldActors and Lights
         unsigned int wSSBO, lSSBO;
-        Mesh* wArray = world->GetSceneActors ();
-        Light* lArray = world->GetLights ();
+        Model* modelsToSend = world->GetModelsToRender ();
         glGenBuffers (1, &wSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, wSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (wArray), wArray, GL_STATIC_READ);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (wArray), wArray, GL_STATIC_READ); // TO MODIFY
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 3, wSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         glGenBuffers (1, &lSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, lSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (lArray), lArray, GL_STATIC_READ);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (lArray), lArray, GL_STATIC_READ); // TO REMOVE PROPERLY
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, lSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 

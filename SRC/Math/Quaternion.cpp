@@ -73,6 +73,8 @@ Vector3 Quaternion::getRotatedZVector () {
 	return (ret * getConjugate ()).toVector ();
 }
 
+const Quaternion Quaternion::identity (1, 0, 0, 0);
+
 std::ostream& operator<<(std::ostream& os, const Quaternion& q) {
 	os << '{' << q.real << ',' << q.i << ',' << q.j << ',' << q.k << '}';
 	return os;

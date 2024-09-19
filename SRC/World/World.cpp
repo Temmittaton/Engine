@@ -40,31 +40,8 @@ World::World (Vector3 worldSize, unsigned int chunkSize, Vector3 skyColor) {
 	WorldActor sphere = WorldActor::CreateSphere (*this);
 }
 
-Mesh* World::GetSceneActors () const {
-	unsigned int n = 0;
-	while (worldActors [n] != NULL) {
-		n++;
-	}
-
-	Mesh* meshes = new Mesh [n];
-	for (int i = 0; i < n; i++) {
-		meshes [i] = worldActors [i]->model.mesh;
-	}
-
-	return meshes;
-}
-
-struct LightInfo World::GetLights () {
-	std::vector<Light*> lights;
-	for (int i = 0; i < worldActors.size (); i++) {
-		for (int j = 0; j < worldActors [i].size (); j++) {
-			if (&worldActors [i][j]->model.light != NULL) {
-				lights.push_back (&worldActors[i][j]->model.light);
-			}
-		}
-	}
-
-	return LightInfo (&lights, worldSkyColor);
+struct Scene World::GetSceneToRender () const {
+	return nullptr;
 }
 
 struct ID World::AddWorldActor (WorldActor* instance, Vector3 pos) {
