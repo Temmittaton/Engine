@@ -19,9 +19,6 @@
     <Filter Include="Fichiers sources\Render\Shaders">
       <UniqueIdentifier>{f1827763-bec7-43a4-bbec-6ca54224f27d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\Maths">
-      <UniqueIdentifier>{60b369ab-edad-49c9-881b-b0b27b4b10ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers sources\World">
       <UniqueIdentifier>{d0b01521-6640-413a-9c66-7e7584c00988}</UniqueIdentifier>
     </Filter>
@@ -35,12 +32,6 @@
     </ClCompile>
     <ClCompile Include="SRC\Render\Renderer.cpp">
       <Filter>Fichiers sources\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="SRC\Math\Quaternion.cpp">
-      <Filter>Fichiers sources\Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="SRC\Math\Vector3.cpp">
-      <Filter>Fichiers sources\Maths</Filter>
     </ClCompile>
     <ClCompile Include="SRC\World\World.cpp">
       <Filter>Fichiers sources\World</Filter>
@@ -57,9 +48,6 @@
     <ClCompile Include="SRC\WorldActor\WorldActor.cpp">
       <Filter>Fichiers sources\WorldActor</Filter>
     </ClCompile>
-    <ClCompile Include="SRC\Math\Vector2.cpp">
-      <Filter>Fichiers sources\Maths</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SRC\Render\Shaders\baseShader.shader">
@@ -72,12 +60,6 @@
   <ItemGroup>
     <ClInclude Include="SRC\Render\Renderer.hpp">
       <Filter>Fichiers sources\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\Math\Quaternion.h">
-      <Filter>Fichiers sources\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\Math\Vector3.hpp">
-      <Filter>Fichiers sources\Maths</Filter>
     </ClInclude>
     <ClInclude Include="SRC\World\World.h">
       <Filter>Fichiers sources\World</Filter>
@@ -93,9 +75,6 @@
     </ClInclude>
     <ClInclude Include="SRC\WorldActor\WorldActor.hpp">
       <Filter>Fichiers sources\WorldActor</Filter>
-    </ClInclude>
-    <ClInclude Include="SRC\Math\Vector2.hpp">
-      <Filter>Fichiers sources\Maths</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

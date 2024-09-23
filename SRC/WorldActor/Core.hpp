@@ -1,21 +1,22 @@
-#include "../Math/Vector3.hpp"
-#include "../Math/Quaternion.h"
+#include <glm/vec3.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #ifndef CORE_H
 #define CORE_H
 
 class Core {
 public:
-	Vector3 position, scale;
-	Quaternion rotation;
+	glm::vec3 position, scale;
+	glm::quat rotation;
 
 	// Constructors
 	Core ();
-	Core (Vector3 ipos, Vector3 iscale = Vector3::one, Quaternion irot = Quaternion::identity);
+	Core (glm::vec3 ipos, glm::vec3 iscale = glm::vec3 (1, 1, 1), glm::quat irot = glm::quat (0, 1, 0, 0));
 
-	Vector3 forward () {
-		return rotation.toVector () * Vector3::forward;
-	}
+	glm::vec3 forward () const;
+	glm::vec3 up () const;
+	glm::vec3 right () const;
 };
 
 #endif

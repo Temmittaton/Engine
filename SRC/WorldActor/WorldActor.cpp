@@ -1,14 +1,15 @@
 #include "WorldActor.hpp"
-#include "../World/World.h"
 
 // Constructors
+WorldActor::WorldActor () {}
+
 WorldActor::WorldActor (World& world) {
 	core = Core ();
 
 	world.AddWorldActor (this, core.position);
 }
-WorldActor::WorldActor (World& world, Vector3 position) {
-	core = Core (position, Vector3::zero, Vector3::zero);
+WorldActor::WorldActor (World& world, vec3 position) {
+	core = Core (position, vec3 (0, 0, 0), vec3 (0, 0, 0));
 }
 WorldActor::WorldActor (World& world, Core icore) {
 	core = icore;
@@ -28,6 +29,6 @@ void WorldActor::AddChild (WorldActor* child) {
 
 }
 
-void WorldActor::Move (Vector3 movement) {
+void WorldActor::Move (vec3 movement) {
 
 }

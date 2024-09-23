@@ -1,3 +1,7 @@
+#ifndef _WORLD_
+
+#define _WORLD_
+
 #include <vector>
 #include "../WorldActor/Camera.hpp"
 #include "../WorldActor/WorldActor.hpp"
@@ -5,22 +9,24 @@
 #pragma once
 
 struct Scene {
-	Model
+	std::vector<Model*> models;
 };
 
 class World {
 public :
 	// Attributes
-	Vector3 worldDimensions, chunkNumber;
+	vec3 worldDimensions, chunkNumber;
 	unsigned int chunksDimensions, chunkLength;
 	WorldActor* mainCamera;
 	std::vector<std::vector<WorldActor*>> worldActors;
-	Vector3 worldSkyColor;
+	vec3 worldSkyColor;
 
 	// Constructors
-	World (Vector3 worldSize, unsigned int chunkSize, Vector3 skyColor);
+	World (vec3 worldSize, unsigned int chunkSize, vec3 skyColor);
 
 	// Methods
 	struct Scene GetSceneToRender () const;
-	struct ID AddWorldActor (WorldActor* instance, Vector3 pos);
+	struct ID AddWorldActor (WorldActor* instance, vec3 pos);
 };
+
+#endif _WORLD_

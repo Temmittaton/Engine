@@ -7,5 +7,8 @@ public :
 	int fov = 90;
 
 	// Constructors
-	Camera (World& world);
+	Camera ();
+
+	// Methods
+	glm::mat4 GetViewMatrix ();
 };

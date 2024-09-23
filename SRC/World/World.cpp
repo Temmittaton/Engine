@@ -1,54 +1,56 @@
 #include "World.h"
-#include "../WorldActor/WorldActor.hpp"
 
 struct ID {
-	Vector3 ChunkID;
+	vec3 ChunkID;
 	unsigned int nID;
 
-	ID (Vector3 _chunkID, unsigned int _ID) {
+	ID (vec3 _chunkID, unsigned int _ID) {
 		ChunkID = _chunkID;
 		nID = _ID;
 	}
 };
 struct LightInfo {
 	std::vector<Light*> *lights;
-	Vector3 skyColor;
+	vec3 skyColor;
 
-	LightInfo (std::vector<Light*> *_lights, Vector3 _skyColor) {
+	LightInfo (std::vector<Light*> *_lights, vec3 _skyColor) {
 		lights = _lights;
 		skyColor = _skyColor;
 	}
 };
 
 // Constructors
-World::World (Vector3 worldSize, unsigned int chunkSize, Vector3 skyColor) {
+World::World (vec3 worldSize, unsigned int chunkSize, vec3 skyColor) {
 	// Setting up worldActors array, chunks
 	worldDimensions = worldSize;
 	chunksDimensions = chunkSize;
 
-	chunkNumber = (worldSize / chunksDimensions).toInt3 ();
+	chunkNumber = (worldSize / vec3(chunksDimensions));
+
+	chunkNumber.x = (int)chunkNumber.x;
+	chunkNumber.y = (int)chunkNumber.y;
+	chunkNumber.z = (int)chunkNumber.z;
+
 	worldActors = std::vector<std::vector<WorldActor*>> (chunkNumber[0] * chunkNumber [1] * chunkNumber [2], std::vector<WorldActor*> (16));
 
 	worldSkyColor = skyColor;
 
 	// Instance camera
-	mainCamera = new Camera (*this);
+	mainCamera = new Camera ();
 
 
-	(*mainCamera).core.position = Vector3 (0, 0, -5);
-
-	WorldActor sphere = WorldActor::CreateSphere (*this);
+	(*mainCamera).core.position = vec3 (0, 0, -5);
 }
 
 struct Scene World::GetSceneToRender () const {
-	return nullptr;
+	return Scene ();
 }
 
-struct ID World::AddWorldActor (WorldActor* instance, Vector3 pos) {
+struct ID World::AddWorldActor (WorldActor* instance, vec3 pos) {
 	// Transform pos to positive space
-	Vector3 pPos = (pos + worldDimensions) / 2;
+	vec3 pPos = (pos + worldDimensions) / vec3 (2);
 
-	Vector3 chunk = (pPos / chunksDimensions).toInt3 ();
+	vec3 chunk = (pPos / vec3 (chunksDimensions));
 	int linearIndex = chunk[0] * chunkNumber[0] * chunkNumber [1] * chunkNumber [2] + chunk[1] * chunkNumber [1] * chunkNumber [2] + chunk [2] * chunkNumber [2];
 
 	int i = 0;

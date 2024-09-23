@@ -131,9 +131,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SRC\Application.cpp" />
-    <ClCompile Include="SRC\Math\Quaternion.cpp" />
-    <ClCompile Include="SRC\Math\Vector2.cpp" />
-    <ClCompile Include="SRC\Math\Vector3.cpp" />
     <ClCompile Include="SRC\Render\Renderer.cpp" />
     <ClCompile Include="SRC\WorldActor\Camera.cpp" />
     <ClCompile Include="SRC\WorldActor\Core.cpp" />
@@ -146,9 +143,6 @@
     <None Include="SRC\Render\Shaders\baseShader.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SRC\Math\Quaternion.h" />
-    <ClInclude Include="SRC\Math\Vector2.hpp" />
-    <ClInclude Include="SRC\Math\Vector3.hpp" />
     <ClInclude Include="SRC\Render\Renderer.hpp" />
     <ClInclude Include="SRC\WorldActor\Camera.hpp" />
     <ClInclude Include="SRC\WorldActor\Core.hpp" />

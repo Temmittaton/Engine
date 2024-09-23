@@ -1,8 +1,12 @@
 #include "Camera.hpp"
 #include "../World/World.h"
 
-Camera::Camera (World &world) {
+// Contructor
+Camera::Camera () {
 	core = Core ();
-
-
 };
+
+// Methods
+glm::mat4 Camera::GetViewMatrix () {
+	
+}

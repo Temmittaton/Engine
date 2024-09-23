@@ -1,37 +1,39 @@
 #include <vector>
-#include "../Math/Vector3.hpp"
-#include "../Math/Vector2.hpp"
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
+using namespace glm;
 
 #pragma once
 struct Light {
 	float intensity;
-	Vector3 color;
+	vec3 color;
 
-	Light (float intensity = 0, Vector3 color = Vector3 (1, 1, 1)) {
+	Light (float intensity = 0, vec3 color = vec3 (1, 1, 1)) {
 		this->intensity = intensity;
 		this->color = color;
 	}
 };
 struct Material {
-	Vector3 color;
+	vec3 color;
 	bool isLight;
 	Light light;
 
 	Material () {
-		this->color = Vector3::one;
+		this->color = vec3 (1, 1, 1);
 		this->isLight = false;
 		this->light = Light ();
 	}
-	Material (Vector3 col, bool isLight = false, Light light = Light ()) {
+	Material (vec3 col, bool isLight = false, Light light = Light ()) {
 		this->color = col;
 		this->isLight = isLight;
 		this->light = light;
 	}
 };
 struct Vertex {
-	Vector3 pos;
-	Vector3 normal;
-	Vector2 texCoords;
+	vec3 pos;
+	vec3 normal;
+	vec2 texCoords;
 };
 struct Mesh {
 	Material material;
@@ -41,7 +43,7 @@ struct Mesh {
 	Mesh () {
 		vertices = std::vector<Vertex> (0);
 		indices = std::vector<unsigned int> (0);
-		material = Material (Vector3::zero, false, Light ());
+		material = Material (vec3 (0, 0, 0), false, Light ());
 	}
 	Mesh (std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, Material _mat, bool _isLight = false, Light* _light = NULL) {
 		vertices = _vertices;
@@ -51,7 +53,7 @@ struct Mesh {
 	Mesh (Light light) {
 		vertices = std::vector<Vertex> (0);
 		indices = std::vector<unsigned int> (0);
-		material = Material (Vector3::zero, true, light);
+		material = Material (vec3 (0, 0, 0), true, light);
 	}
 };
 
@@ -62,14 +64,8 @@ public :
 
 	// Constructors
 	Model ();
-	Model (bool isLight, float intensity, Vector3 color);
+	Model (bool isLight, float intensity, vec3 color);
 
 	// Methods
 	
-};
-
-class Sphere : Model {
-public :
-	Sphere (float irad);
-
 };
