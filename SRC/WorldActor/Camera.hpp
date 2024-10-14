@@ -1,6 +1,11 @@
+#ifndef _CAMERA_
+
+#define _CAMERA_
+
 #include "WorldActor.hpp"
 
-#pragma once
+class WorldActor;
+
 class Camera : public WorldActor {
 public :
 	// Attributes
@@ -12,3 +17,5 @@ public :
 	// Methods
 	glm::mat4 GetViewMatrix ();
 };
+
+#endif _CAMERA_

@@ -14,10 +14,15 @@ WorldActor::WorldActor (World& world, vec3 position) {
 WorldActor::WorldActor (World& world, Core icore) {
 	core = icore;
 }
-WorldActor::WorldActor (World& world, WorldActor* iparent) {
-	parent = iparent;
-	core = iparent->core;
-	iparent->AddChild (this);
+WorldActor::WorldActor (World& world, WorldActor& iparent) {
+	parent = &iparent;
+	core = iparent.core;
+	iparent.AddChild (this);
+}
+
+// Destructor
+WorldActor::~WorldActor () {
+	delete (id);
 }
 
 // Methods

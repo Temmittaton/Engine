@@ -143,6 +143,7 @@
     <None Include="SRC\Render\Shaders\baseShader.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ID.h" />
     <ClInclude Include="SRC\Render\Renderer.hpp" />
     <ClInclude Include="SRC\WorldActor\Camera.hpp" />
     <ClInclude Include="SRC\WorldActor\Core.hpp" />

@@ -159,7 +159,7 @@ void Renderer::RenderFrame (World* world) {
     unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
 
     while (!glfwWindowShouldClose (window)) {
-        // Get the window size
+        /*// Get the window size
         glfwGetWindowSize (window, &SCR_WIDTH, &SCR_HEIGHT);
 
         // Set shader variables
@@ -168,7 +168,7 @@ void Renderer::RenderFrame (World* world) {
 
         // SSBOs for WorldActors and Lights
         unsigned int wSSBO, lSSBO;
-        Model* modelsToSend = world->GetModelsToRender ();
+        Scene scene = world->GetSceneToRender ();
         glGenBuffers (1, &wSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, wSSBO);
         glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (wArray), wArray, GL_STATIC_READ); // TO MODIFY
@@ -197,7 +197,7 @@ void Renderer::RenderFrame (World* world) {
 
         // Swap buffers and poll events
         glfwSwapBuffers (window);
-        glfwPollEvents ();
+        glfwPollEvents ();*/
     }
 
     // Cleanup

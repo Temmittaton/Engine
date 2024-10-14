@@ -1,5 +1,4 @@
 #include "Camera.hpp"
-#include "../World/World.h"
 
 // Contructor
 Camera::Camera () {
@@ -8,5 +7,5 @@ Camera::Camera () {
 
 // Methods
 glm::mat4 Camera::GetViewMatrix () {
-	
+	return glm::mat4 ();
 }

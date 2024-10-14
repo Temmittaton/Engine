@@ -1,13 +1,7 @@
 #include "World.h"
 
-struct ID {
-	vec3 ChunkID;
-	unsigned int nID;
-
-	ID (vec3 _chunkID, unsigned int _ID) {
-		ChunkID = _chunkID;
-		nID = _ID;
-	}
+struct Scene {
+	std::vector<Model*> models;
 };
 struct LightInfo {
 	std::vector<Light*> *lights;
@@ -34,19 +28,13 @@ World::World (vec3 worldSize, unsigned int chunkSize, vec3 skyColor) {
 	worldActors = std::vector<std::vector<WorldActor*>> (chunkNumber[0] * chunkNumber [1] * chunkNumber [2], std::vector<WorldActor*> (16));
 
 	worldSkyColor = skyColor;
-
-	// Instance camera
-	mainCamera = new Camera ();
-
-
-	(*mainCamera).core.position = vec3 (0, 0, -5);
 }
 
 struct Scene World::GetSceneToRender () const {
 	return Scene ();
 }
 
-struct ID World::AddWorldActor (WorldActor* instance, vec3 pos) {
+struct ID* World::AddWorldActor (WorldActor* instance, vec3 pos) {
 	// Transform pos to positive space
 	vec3 pPos = (pos + worldDimensions) / vec3 (2);
 
@@ -56,9 +44,13 @@ struct ID World::AddWorldActor (WorldActor* instance, vec3 pos) {
 	int i = 0;
 	while (i < worldActors[linearIndex].size ()) {
 		if (worldActors [linearIndex][i] == NULL) {
-			return ID (chunk, i);
+			ID _id = ID (chunk, i);
+			instance->id = &_id;
+			return &_id;
 		}
 	}
 	worldActors[linearIndex].push_back (instance);
-	return ID (chunk, worldActors[linearIndex].size () - 1);
+	ID _id = ID (chunk, worldActors [linearIndex].size () - 1);
+	instance->id = &_id;
+	return &_id;
 }

@@ -3,30 +3,27 @@
 #define _WORLD_
 
 #include <vector>
-#include "../WorldActor/Camera.hpp"
+#include <glm/glm.hpp>
+#include "ID.h"
 #include "../WorldActor/WorldActor.hpp"
 
-#pragma once
-
-struct Scene {
-	std::vector<Model*> models;
-};
+class WorldActor;
 
 class World {
 public :
 	// Attributes
-	vec3 worldDimensions, chunkNumber;
+	glm::vec3 worldDimensions, chunkNumber;
 	unsigned int chunksDimensions, chunkLength;
 	WorldActor* mainCamera;
 	std::vector<std::vector<WorldActor*>> worldActors;
-	vec3 worldSkyColor;
+	glm::vec3 worldSkyColor;
 
 	// Constructors
-	World (vec3 worldSize, unsigned int chunkSize, vec3 skyColor);
+	World (glm::vec3 worldSize, unsigned int chunkSize, glm::vec3 skyColor);
 
 	// Methods
 	struct Scene GetSceneToRender () const;
-	struct ID AddWorldActor (WorldActor* instance, vec3 pos);
+	struct ID* AddWorldActor (WorldActor* instance, glm::vec3 pos);
 };
 
-#endif _WORLD_
+#endif //_WORLD_
