@@ -165,10 +165,17 @@ void Renderer::RenderFrame (World &world) {
         // SSBOs for WorldActors and Lights
         unsigned int iSSBO, lSSBO;
         Scene* scene = world.GetSceneToRender ();
+
         glGenBuffers (1, &iSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, iSSBO);
         glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (scene->instances), scene->instances, GL_STATIC_READ); // TO MODIFY
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 3, iSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
+
+        glGenBuffers (1, &lSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, lSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (scene->lightIndexes), scene->lightIndexes, GL_STATIC_READ); // TO MODIFY
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, lSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         // Use the shader program

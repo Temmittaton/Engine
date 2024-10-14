@@ -10,13 +10,43 @@ void main () {
 #shader fragment
 #version 450 core
 
-// Structs
-struct Ray {
+// Object structs
+struct Light {
 	vec3 pos;
-	vec3 dir;
+	float intensity;
+	vec4 color;
 };
 struct Material {
 	vec4 color;
+	bool isLight;
+	Light light;
+};
+struct Mesh {
+	Material material;
+	vec3[32] vertices;
+	int[32] indices;
+};
+struct Core {
+	vec3 position, scale;
+	mat4 rotation;
+};
+struct Model {
+	Mesh mesh;
+};
+struct Object {
+	Core core;
+	Model model;
+};
+struct Camera {
+	vec3 pos;
+	vec3 forward;
+	float fov;
+};
+
+// Shader Structs
+struct Ray {
+	vec3 pos;
+	vec3 dir;
 };
 struct HitInfo {
 	bool didHit;
@@ -26,30 +56,14 @@ struct HitInfo {
 	Material material;
 };
 
-struct Camera {
-	vec3 pos;
-	vec3 forward;
-	float fov;
-};
-struct Sphere {
-	vec3 pos;
-	float rad;
-	Material material;
-};
-struct Light {
-	vec3 pos;
-	float intensity;
-	vec4 color;
-};
-
 // Inout Variables
 layout (pixel_center_integer) in vec4 gl_FragCoord;
 layout (location = 0) out vec4 color;
 layout (std430, binding = 3) buffer ObjectBuffer {
-	Sphere spheres [];
+	Object objects [];
 };
-layout (std430, binding = 4) buffer LightBuffer {
-	Light lights [];
+layout (std430, binding = 4) buffer LightIndexes {
+	int lightIndexes [];
 };
 // Variables
 uniform vec2 _WindowDimensions;
@@ -75,35 +89,16 @@ vec4 GetEnvironmentLight (Ray ray) {
 	return skyGradient;
 }
 
-HitInfo SphereHit (Sphere sphere, Ray ray) {
-	HitInfo _hit = HitInfo (false, 0, vec3 (0, 0, 0), vec3 (0, 0, 0), Material (vec4 (0, 0, 0, 1)));
-	vec3 offsetRayPos = (ray.pos - sphere.pos);
-
-	float a = dot (ray.dir, ray.dir);
-	float b = 2 * dot (offsetRayPos, ray.dir);
-	float c = dot (offsetRayPos, offsetRayPos) - sphere.rad * sphere.rad;
-	float delta = b * b - 4 * a * c;
-
-	if (delta >= 0) {
-		float dist = (-b - sqrt (delta)) / (2 * a);
-
-		if (dist >= 0) {
-			_hit.didHit = true;
-			_hit.dist = dist;
-			_hit.hitPoint = ray.pos + ray.dir * dist;
-			_hit.normal = normalize (_hit.hitPoint - sphere.pos);
-			_hit.material = sphere.material;
-		}
-	}
-
-	return _hit;
-}
-
 vec4 GetLight (vec3 hitPoint) {
 
 	// To make
 
 	return vec4 (1, 1, 1, 1);
+}
+
+
+HitInfo ObjectHit (Object object, Ray ray) {
+	return HitInfo (false, 0, vec3 (0, 0, 0), vec3 (0, 0, 0), Material (vec4 (0, 0, 0, 1), false, Light (vec3 (0, 0, 0), 0, vec4 (0, 0, 0, 0))));
 }
 
 vec4 GetColor (Ray ray) {
@@ -116,8 +111,8 @@ vec4 GetColor (Ray ray) {
 		float maxDist = 0;
 		HitInfo hit;
 
-		for (int j = 0; j < spheres.length (); j++) {
-			HitInfo _hit = SphereHit (spheres [j], ray);
+		for (int j = 0; j < objects.length (); j++) {
+			HitInfo _hit = ObjectHit (objects [j], ray);
 			if (_hit.dist > maxDist) {
 				return vec4 (1, 0, 0, 1); // Test
 				maxDist = _hit.dist;
@@ -125,7 +120,7 @@ vec4 GetColor (Ray ray) {
 			}
 			return vec4 (1, 0, 0, 1); // To remove
 		}
-		//HitInfo _hit = SphereHit (spheres [0], ray);
+		//HitInfo _hit = ObjectHit (objects [0], ray);
 
 		if (!hit.didHit) {
 			_color += GetEnvironmentLight (ray);
@@ -153,10 +148,15 @@ vec4 GetColor (Ray ray) {
 
 // Main
 void main () {
-	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
+	if (lightIndexes[0] != 0) {
+		color = vec4(0, 0, 0, 1);
+	}
+	else {
+		vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
 	Ray _ray = Ray (vec3 (0, 0, -5), vec3 (uv.x * 16, uv.y * 9, 1));
 	//Ray _ray = Ray (vec3 (0, 0, -5), vec3 (0, 0, 1));
 
 	color = clamp (GetColor (_ray), 0, 1);
+	}
 };

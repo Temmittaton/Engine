@@ -30,24 +30,36 @@ World::World (vec3 worldSize, unsigned int chunkSize, unsigned int chunkLength, 
 
 struct Scene* World::GetSceneToRender () const {
 	unsigned int instanceNumber = 0; // need to add culling and optis soon this is terrible
+	unsigned int lightNumber = 0;
 	unsigned int linearSize = (worldDimensions.x * worldDimensions.y * worldDimensions.z) / (chunksDimensions * chunksDimensions * chunksDimensions);
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
 				instanceNumber++;
+
+				if (worldActors [i][j]->model.mesh.material.isLight) {
+					lightNumber++;
+				}
 			}
 		}
 	}
 
-	Scene* _scene = new Scene (instanceNumber);
+	Scene* _scene = new Scene (instanceNumber, lightNumber);
 	instanceNumber = 0;
+	lightNumber = 0;
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
-				_scene->instances [instanceNumber] = worldActors [i][j];
+				_scene->instances [instanceNumber] = Object (worldActors [i][j]->core, worldActors [i][j]->model);
 				instanceNumber++;
+
+				if (worldActors [i][j]->model.mesh.material.isLight) {
+					_scene->lightIndexes [lightNumber] = i;
+					_scene->lightIndexes [lightNumber + 1] = j;
+					lightNumber += 2;
+				}
 			}
 		}
 	}
