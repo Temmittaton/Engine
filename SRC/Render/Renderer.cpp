@@ -1,10 +1,6 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 #include "Renderer.hpp"
+
+struct Scene;
 
 struct ShaderProgramSource {
     std::string VertexSource;
@@ -152,14 +148,14 @@ void Renderer::RenderInit () {
     glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
     glEnableVertexAttribArray (1);
 }
-void Renderer::RenderFrame (World* world) {
+void Renderer::RenderFrame (World &world) {
     // Compile and link the shaders
     ShaderProgramSource source = ParseShader ("SRC/Render/Shaders/baseShader.shader");
 
     unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
 
     while (!glfwWindowShouldClose (window)) {
-        /*// Get the window size
+        // Get the window size
         glfwGetWindowSize (window, &SCR_WIDTH, &SCR_HEIGHT);
 
         // Set shader variables
@@ -167,18 +163,12 @@ void Renderer::RenderFrame (World* world) {
         int uniform_Camera = glGetUniformLocation (shader, "_Camera");
 
         // SSBOs for WorldActors and Lights
-        unsigned int wSSBO, lSSBO;
-        Scene scene = world->GetSceneToRender ();
-        glGenBuffers (1, &wSSBO);
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, wSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (wArray), wArray, GL_STATIC_READ); // TO MODIFY
-        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 3, wSSBO);
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
-
-        glGenBuffers (1, &lSSBO);
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, lSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (lArray), lArray, GL_STATIC_READ); // TO REMOVE PROPERLY
-        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, lSSBO);
+        unsigned int iSSBO, lSSBO;
+        Scene* scene = world.GetSceneToRender ();
+        glGenBuffers (1, &iSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, iSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (scene->instances), scene->instances, GL_STATIC_READ); // TO MODIFY
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 3, iSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         // Use the shader program
@@ -197,7 +187,7 @@ void Renderer::RenderFrame (World* world) {
 
         // Swap buffers and poll events
         glfwSwapBuffers (window);
-        glfwPollEvents ();*/
+        glfwPollEvents ();
     }
 
     // Cleanup

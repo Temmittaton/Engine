@@ -79,5 +79,8 @@
     <ClInclude Include="ID.h">
       <Filter>Fichiers sources\World</Filter>
     </ClInclude>
+    <ClInclude Include="SRC\World\Scene.h">
+      <Filter>Fichiers sources\World</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

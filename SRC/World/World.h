@@ -5,6 +5,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "ID.h"
+#include "Scene.h"
 #include "../WorldActor/WorldActor.hpp"
 
 class WorldActor;
@@ -19,10 +20,10 @@ public :
 	glm::vec3 worldSkyColor;
 
 	// Constructors
-	World (glm::vec3 worldSize, unsigned int chunkSize, glm::vec3 skyColor);
+	World (glm::vec3 worldSize, unsigned int chunkSize, unsigned int chunkLength, glm::vec3 skyColor);
 
 	// Methods
-	struct Scene GetSceneToRender () const;
+	struct Scene* GetSceneToRender () const;
 	struct ID* AddWorldActor (WorldActor* instance, glm::vec3 pos);
 };
 

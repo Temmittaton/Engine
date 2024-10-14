@@ -149,6 +149,7 @@
     <ClInclude Include="SRC\WorldActor\Core.hpp" />
     <ClInclude Include="SRC\WorldActor\Model.hpp" />
     <ClInclude Include="SRC\WorldActor\WorldActor.hpp" />
+    <ClInclude Include="SRC\World\Scene.h" />
     <ClInclude Include="SRC\World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

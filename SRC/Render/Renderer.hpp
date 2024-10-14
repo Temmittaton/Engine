@@ -1,6 +1,11 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include "../World/World.h"
-
-#pragma once
+#include "../World/Scene.h"
 
 class Renderer {
 public:
@@ -12,6 +17,6 @@ public:
 	Renderer () {};
 
 	void RenderInit ();
-	void RenderFrame (World* world);
+	void RenderFrame (World &world);
 };
 
