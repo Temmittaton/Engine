@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include "../GameManager/GameManager.hpp"
 #include "../World/World.h"
 #include "../World/Scene.h"
 
@@ -17,6 +18,6 @@ public:
 	Renderer () {};
 
 	void RenderInit ();
-	void RenderFrame (World &world);
+	void RenderFrame (GameManager* gameManager);
 };
 

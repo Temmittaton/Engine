@@ -25,6 +25,9 @@
     <Filter Include="Fichiers sources\WorldActor">
       <UniqueIdentifier>{d02c0d59-7267-45e8-85ce-6dfdfbd1171a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\GameManager">
+      <UniqueIdentifier>{eb8489ed-e330-46ca-8de9-5ee95349c92e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SRC\Application.cpp">
@@ -47,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="SRC\WorldActor\WorldActor.cpp">
       <Filter>Fichiers sources\WorldActor</Filter>
+    </ClCompile>
+    <ClCompile Include="SRC\GameManager\GameManager.cpp">
+      <Filter>Fichiers sources\GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="SRC\World\Scene.h">
       <Filter>Fichiers sources\World</Filter>
+    </ClInclude>
+    <ClInclude Include="SRC\GameManager\GameManager.hpp">
+      <Filter>Fichiers sources\GameManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

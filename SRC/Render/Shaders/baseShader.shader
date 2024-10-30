@@ -12,12 +12,11 @@ void main () {
 
 // Object structs
 struct Light {
-	vec3 pos;
 	float intensity;
-	vec4 color;
+	vec3 color;
 };
 struct Material {
-	vec4 color;
+	vec3 color;
 	bool isLight;
 	Light light;
 };
@@ -30,12 +29,9 @@ struct Core {
 	vec3 position, scale;
 	mat4 rotation;
 };
-struct Model {
-	Mesh mesh;
-};
 struct Object {
-	Core core;
-	Model model;
+	int coreIndex;
+	int meshIndex;
 };
 struct Camera {
 	vec3 pos;
@@ -62,15 +58,27 @@ layout (location = 0) out vec4 color;
 layout (std430, binding = 3) buffer ObjectBuffer {
 	Object objects [];
 };
-layout (std430, binding = 4) buffer LightIndexes {
+layout (std430, binding = 4) buffer CoreBuffer {
+	Core cores [];
+};
+layout (std430, binding = 5) buffer MeshBuffer {
+	Mesh meshes [];
+};
+layout (std430, binding = 6) buffer MaterialsBuffer {
+	Material materials [];
+};
+layout (std430, binding = 7) buffer LightIndexes {
 	int lightIndexes [];
 };
-// Variables
+// Variables,
 uniform vec2 _WindowDimensions;
+uniform float _time;
 uniform Camera _Camera;
-const int MAX_BOUNCES = 1;
+
+uniform vec4 _SkyColorZenith;
+
 const vec4 SkyColorHorizon = vec4 (.25, 1, .25, 1);
-const vec4 SkyColorZenith = vec4 (.6, .6, 1, 1);
+const int MAX_BOUNCES = 1;
 
 // Methods
 Ray mirror (Ray ray, vec3 normal, vec3 origin) {
@@ -83,7 +91,7 @@ Ray mirror (Ray ray, vec3 normal, vec3 origin) {
 
 vec4 GetEnvironmentLight (Ray ray) {
 	float skyGradientT = smoothstep (0.0, 0.4, ray.dir.y);
-	vec4 skyGradient = mix (SkyColorHorizon, SkyColorZenith, skyGradientT);
+	vec4 skyGradient = mix (SkyColorHorizon, _SkyColorZenith * sin (_time / 360), skyGradientT);
 	// To make
 
 	return skyGradient;
@@ -98,7 +106,7 @@ vec4 GetLight (vec3 hitPoint) {
 
 
 HitInfo ObjectHit (Object object, Ray ray) {
-	return HitInfo (false, 0, vec3 (0, 0, 0), vec3 (0, 0, 0), Material (vec4 (0, 0, 0, 1), false, Light (vec3 (0, 0, 0), 0, vec4 (0, 0, 0, 0))));
+	return HitInfo (false, 0, vec3 (0, 0, 0), vec3 (0, 0, 0), Material (vec3 (0, 0, 0), false, Light (0, vec3 (0, 0, 0))));
 }
 
 vec4 GetColor (Ray ray) {
@@ -138,7 +146,7 @@ vec4 GetColor (Ray ray) {
 	i--;
 
 	while (i >= 0) {
-		_color += _lights [i] * _materials [i].color;
+		_color += _lights [i] * vec4(_materials [i].color, 1);
 
 		i--;
 	}
@@ -148,15 +156,13 @@ vec4 GetColor (Ray ray) {
 
 // Main
 void main () {
-	if (lightIndexes[0] != 0) {
-		color = vec4(0, 0, 0, 1);
-	}
-	else {
-		vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
+	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
 	Ray _ray = Ray (vec3 (0, 0, -5), vec3 (uv.x * 16, uv.y * 9, 1));
 	//Ray _ray = Ray (vec3 (0, 0, -5), vec3 (0, 0, 1));
 
-	color = clamp (GetColor (_ray), 0, 1);
-	}
+	//color = clamp (GetColor (_ray), 0, 1);
+
+	//color = vec4(materials [objects [0].meshIndex].light.color);
+	color = vec4(cores [objects [0].coreIndex].position, 1);
 };

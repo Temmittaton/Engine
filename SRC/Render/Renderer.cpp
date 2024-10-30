@@ -148,39 +148,66 @@ void Renderer::RenderInit () {
     glVertexAttribPointer (1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof (float), (void*)(3 * sizeof (float)));
     glEnableVertexAttribArray (1);
 }
-void Renderer::RenderFrame (World &world) {
+void Renderer::RenderFrame (GameManager* gameManager) {
     // Compile and link the shaders
     ShaderProgramSource source = ParseShader ("SRC/Render/Shaders/baseShader.shader");
 
     unsigned int shader = CreateShader (source.VertexSource, source.FragmentSource);
 
     while (!glfwWindowShouldClose (window)) {
+        /// PROGRAM
+        gameManager->Frame ();
+
+        /// RENDER
+
         // Get the window size
         glfwGetWindowSize (window, &SCR_WIDTH, &SCR_HEIGHT);
 
         // Set shader variables
         int uniform_WindowSize = glGetUniformLocation (shader, "_WindowDimensions");
+        int uniform_Time = glGetUniformLocation (shader, "_time");
         int uniform_Camera = glGetUniformLocation (shader, "_Camera");
+        int uniform_skyZenith = glGetUniformLocation (shader, "_SkyColorZenith");
 
         // SSBOs for WorldActors and Lights
-        unsigned int iSSBO, lSSBO;
-        Scene* scene = world.GetSceneToRender ();
+        GLuint iSSBO, cSSBO, meSSBO, maSSBO, lSSBO;
+        Scene* scene = gameManager->currentWorld->GetSceneToRender ();
 
         glGenBuffers (1, &iSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, iSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (scene->instances), scene->instances, GL_STATIC_READ); // TO MODIFY
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Object), scene->instances, GL_STATIC_READ);
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 3, iSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
+
+        glGenBuffers (1, &cSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, cSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Core), scene->cores, GL_STATIC_READ);
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, cSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
+
+        glGenBuffers (1, &meSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, meSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->meshNumber * sizeof (Mesh), scene->meshes, GL_STATIC_READ);
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 5, meSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
+
+        glGenBuffers (1, &maSSBO);
+        glBindBuffer (GL_SHADER_STORAGE_BUFFER, maSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->meshNumber * sizeof (Material), scene->materials, GL_STATIC_READ);
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 6, maSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         glGenBuffers (1, &lSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, lSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, sizeof (scene->lightIndexes), scene->lightIndexes, GL_STATIC_READ); // TO MODIFY
-        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, lSSBO);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, 2 * scene->lightNumber * sizeof (int), scene->lightIndexes, GL_STATIC_READ);
+        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 7, lSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         // Use the shader program
         glUseProgram (shader);
         glUniform2f (uniform_WindowSize, SCR_WIDTH, SCR_HEIGHT);
+        glUniform1f (uniform_Time, gameManager->gameTime);
+        glUniform4f (uniform_skyZenith, gameManager->currentWorld->worldSkyColor.x, gameManager->currentWorld->worldSkyColor.y, gameManager->currentWorld->worldSkyColor.z, 1.0);
 
         // Update quad
         UpdateQuadVertices (quad, SCR_WIDTH, SCR_HEIGHT);
@@ -195,6 +222,9 @@ void Renderer::RenderFrame (World &world) {
         // Swap buffers and poll events
         glfwSwapBuffers (window);
         glfwPollEvents ();
+
+        // Memory cleanup
+        delete scene;
     }
 
     // Cleanup

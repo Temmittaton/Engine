@@ -22,6 +22,9 @@ public :
 	// Constructors
 	World (glm::vec3 worldSize, unsigned int chunkSize, unsigned int chunkLength, glm::vec3 skyColor);
 
+	// Destructor
+	~World ();
+
 	// Methods
 	struct Scene* GetSceneToRender () const;
 	struct ID* AddWorldActor (WorldActor* instance, glm::vec3 pos);

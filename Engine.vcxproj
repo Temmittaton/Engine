@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SRC\Application.cpp" />
+    <ClCompile Include="SRC\GameManager\GameManager.cpp" />
     <ClCompile Include="SRC\Render\Renderer.cpp" />
     <ClCompile Include="SRC\WorldActor\Camera.cpp" />
     <ClCompile Include="SRC\WorldActor\Core.cpp" />
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ID.h" />
+    <ClInclude Include="SRC\GameManager\GameManager.hpp" />
     <ClInclude Include="SRC\Render\Renderer.hpp" />
     <ClInclude Include="SRC\WorldActor\Camera.hpp" />
     <ClInclude Include="SRC\WorldActor\Core.hpp" />
