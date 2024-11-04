@@ -180,11 +180,11 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         int s4 = sizeof (Light);*/
 
         /*std::cout << "Size of Material: " << sizeof (Material) << std::endl;
-        std::cout << "Offset of Material in Mesh : " << offsetof (Mesh, material) << std::endl;
         std::cout << "Offset of vertices in Mesh: " << offsetof (Mesh, vertices) << std::endl;
         std::cout << "Offset of indices in Mesh: " << offsetof (Mesh, indices) << std::endl;
-        std::cout << "Offset of padding in Mesh: " << offsetof (Mesh, padding) << std::endl;*/
-
+        std::cout << "Offset of padding in Mesh: " << offsetof (Mesh, padding) << std::endl;
+        std::cout << "Offset of Material in Mesh : " << offsetof (Mesh, material) << std::endl;*/
+        
         glGenBuffers (1, &iSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, iSSBO);
         glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Object), scene->instances, GL_STATIC_READ);

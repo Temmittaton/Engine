@@ -12,23 +12,22 @@ void main () {
 
 #define FLT_MAX 3.402823466e+38
 #define FLT_MIN 1.175494351e-38
-#define NULL_HIT HitInfo (false, FLT_MAX, vec3(0), vec3(0), Material (vec3(0), false, Light (0, vec3 (0))))
+#define NULL_HIT HitInfo (false, FLT_MAX, vec3(0), vec3(0), Material (vec4(0), Light (vec4(0), vec4 (0))))
 
 // Object structs
 struct Light {
-	float intensity;
-	vec3 color;
+	vec4 intensity;
+	vec4 color;
 };
 struct Material {
-	vec3 color;
-	int isLight;
+	vec4 color;
 	Light light;
 };
 struct Mesh {
-	Material material;
 	vec4[3] vertices;
 	uint[3] indices; // multiple of three
 	int padding;
+	Material material;
 };
 struct Core {
 	vec3 position, scale;
@@ -145,10 +144,10 @@ HitInfo ObjectHit (Object object, Ray ray) {
 	HitInfo hit = NULL_HIT;
 
 	for (int i = 0; i < triangleNumber; i += 3) {
-		vec3 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i]];
-		vec3 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 1]];
-		vec3 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 2]];
-		HitInfo _hit = TriangleHit (ray, v1, v2, v3);
+		vec4 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i]];
+		vec4 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 1]];
+		vec4 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 2]];
+		HitInfo _hit = TriangleHit (ray, vec3(v1.x, v1.y, v1.z), vec3(v2.x, v2.y, v2.z), vec3(v3.x, v3.y, v3.z));
 
 		if ((_hit.didHit) && (_hit.dist < hit.dist)) {
 			hit = _hit;
@@ -197,7 +196,7 @@ vec4 GetColor (Ray ray) {
 	i--;
 
 	while (i >= 0) {
-		_color += _lights [i] * vec4(_materials [i].color, 1);
+		_color += _lights [i] * _materials [i].color;
 
 		i--;
 	}
@@ -220,5 +219,5 @@ void main () {
 	//color = vec4 (cores [objects [0].coreIndex].position, 1); // testing object position
 	//color = vec4 (meshes [objects [0].meshIndex].vertices [0], 1); // testing vertices
 	//color = vec4 (meshes [objects [0].meshIndex].indices [0], 0, 0, 1); // testing indexes
-	color = vec4 (meshes [0].vertices [0], 1); // testing indexes
+	color = meshes [0].material.light.color;
 };

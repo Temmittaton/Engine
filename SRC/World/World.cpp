@@ -45,7 +45,7 @@ struct Scene* World::GetSceneToRender () const {
 			if (worldActors [i][j] != NULL) {
 				instanceNumber++;
 
-				if (worldActors [i][j]->model.mesh.material.isLight) {
+				if (worldActors [i][j]->model.mesh.material.light.intensity != vec4 (0)) {
 					lightNumber++;
 				}
 				if (worldActors [i][j]->model.mesh.vertices->length () != 0) {
@@ -64,7 +64,7 @@ struct Scene* World::GetSceneToRender () const {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
 				int isLight = -1, hasMesh = -1;
-				if (worldActors [i][j]->model.mesh.material.isLight) {
+				if (worldActors [i][j]->model.mesh.material.light.intensity != vec4 (0)) {
 					_scene->lightIndexes [lightNumber] = i;
 					_scene->lightIndexes [lightNumber + 1] = j;
 					isLight = lightNumber;

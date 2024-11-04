@@ -7,42 +7,39 @@ using namespace glm;
 
 #pragma once
 struct Light {
-	float intensity;
-	vec3 color;
+	vec4 intensity;
+	vec4 color;
 
-	Light (float intensity = 0, vec3 color = vec3 (1, 1, 1)) {
+	Light (vec4 intensity = vec4 (0), vec4 color = vec4 (1, 1, 1, 1)) {
 		this->intensity = intensity;
 		this->color = color;
 	}
 };
 struct Material {
-	vec3 color;
-	int isLight;
+	vec4 color;
 	Light light;
 
 	Material () {
-		this->color = vec3 (1, 1, 1);
-		this->isLight = false;
+		this->color = vec4 (1, 1, 1, 1);
 		this->light = Light ();
 	}
-	Material (vec3 col, Light light = Light ()) {
+	Material (vec4 col, Light light = Light ()) {
 		this->color = col;
-		this->isLight = (light.intensity != 0);
 		this->light = light;
 	}
 };
 struct Mesh {
-	Material material;
 	vec4 vertices [3];
 	unsigned int indices [3];
 	int padding = 1;
+	Material material;
 
 	Mesh () {
 		for (int i = 0; i < 3; ++i) {
 			vertices [i] = vec4 (0, 0, 0, 0);
 			indices [i] = 0;
 		}
-		material = Material (vec3 (0, 0, 0));
+		material = Material (vec4 (0, 0, 0, 0));
 	}
 	Mesh (vec4 (&_vertices) [3], const unsigned int (&_indices) [3], Material _mat, bool _isLight = false, Light* _light = NULL) {
 		for (int i = 0; i < 3; ++i) {
@@ -56,7 +53,7 @@ struct Mesh {
 			vertices [i] = vec4 (0, 0, 0, 0);
 			indices [i] = 0;
 		}
-		material = Material (vec3 (0, 0, 0), light);
+		material = Material (vec4 (0, 0, 0, 0), light);
 	}
 };
 
