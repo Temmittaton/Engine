@@ -48,7 +48,7 @@ struct Scene* World::GetSceneToRender () const {
 				if (worldActors [i][j]->model.mesh.material.isLight) {
 					lightNumber++;
 				}
-				if (worldActors [i][j]->model.mesh.vertices.size () != 0) {
+				if (worldActors [i][j]->model.mesh.vertices->length () != 0) {
 					meshNumber++;
 				}
 			}
@@ -70,7 +70,7 @@ struct Scene* World::GetSceneToRender () const {
 					isLight = lightNumber;
 					lightNumber += 2;
 				}
-				if (worldActors [i][j]->model.mesh.vertices.size () != 0) {
+				if (worldActors [i][j]->model.mesh.vertices->length () != 0) {
 					_scene->meshes [meshNumber] = worldActors [i][j]->model.mesh;
 					_scene->materials [meshNumber] = worldActors [i][j]->model.mesh.material;
 					hasMesh = meshNumber;

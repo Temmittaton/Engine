@@ -173,6 +173,18 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         GLuint iSSBO, cSSBO, meSSBO, maSSBO, lSSBO;
         Scene* scene = gameManager->currentWorld->GetSceneToRender ();
 
+        /*int s1 = sizeof (scene->meshes);
+        int t = sizeof (*scene->meshes);
+        int s2 = sizeof (Mesh);
+        int s3 = sizeof (Material);
+        int s4 = sizeof (Light);*/
+
+        /*std::cout << "Size of Material: " << sizeof (Material) << std::endl;
+        std::cout << "Offset of Material in Mesh : " << offsetof (Mesh, material) << std::endl;
+        std::cout << "Offset of vertices in Mesh: " << offsetof (Mesh, vertices) << std::endl;
+        std::cout << "Offset of indices in Mesh: " << offsetof (Mesh, indices) << std::endl;
+        std::cout << "Offset of padding in Mesh: " << offsetof (Mesh, padding) << std::endl;*/
+
         glGenBuffers (1, &iSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, iSSBO);
         glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Object), scene->instances, GL_STATIC_READ);
@@ -187,9 +199,22 @@ void Renderer::RenderFrame (GameManager* gameManager) {
 
         glGenBuffers (1, &meSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, meSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->meshNumber * sizeof (Mesh), scene->meshes, GL_STATIC_READ);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->meshNumber * sizeof (Mesh), scene->meshes, GL_DYNAMIC_DRAW);
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 5, meSSBO);
+        std::vector<Mesh> debugData (scene->meshNumber);
+        glGetBufferSubData (GL_SHADER_STORAGE_BUFFER, 0, scene->meshNumber * sizeof (Mesh), debugData.data ());
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
+
+        /*for (const auto& mesh : debugData) {
+            std::cout << "Material color: " << mesh.material.color.x << ", "
+                << mesh.material.color.y << ", " << mesh.material.color.z << std::endl;
+            std::cout << "Is material light: " << mesh.material.isLight << std::endl;
+            std::cout << "Light intensity: " << mesh.material.light.intensity << std::endl;
+
+            std::cout << "First vertex: " << mesh.vertices [0].x << ", "
+                << mesh.vertices [0].x << ", " << mesh.vertices [0].x << std::endl;
+            // Affiche d'autres champs si nécessaire
+        }*/
 
         glGenBuffers (1, &maSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, maSSBO);

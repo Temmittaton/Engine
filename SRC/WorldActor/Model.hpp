@@ -1,6 +1,7 @@
 #include <vector>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 using namespace glm;
 
@@ -16,7 +17,7 @@ struct Light {
 };
 struct Material {
 	vec3 color;
-	bool isLight;
+	int isLight;
 	Light light;
 
 	Material () {
@@ -24,36 +25,38 @@ struct Material {
 		this->isLight = false;
 		this->light = Light ();
 	}
-	Material (vec3 col, bool isLight = false, Light light = Light ()) {
+	Material (vec3 col, Light light = Light ()) {
 		this->color = col;
-		this->isLight = isLight;
+		this->isLight = (light.intensity != 0);
 		this->light = light;
 	}
 };
-struct Vertex {
-	vec3 pos;
-	vec3 normal;
-	vec2 texCoords;
-};
 struct Mesh {
 	Material material;
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
+	vec4 vertices [3];
+	unsigned int indices [3];
+	int padding = 1;
 
 	Mesh () {
-		vertices = std::vector<Vertex> (0);
-		indices = std::vector<unsigned int> (0);
-		material = Material (vec3 (0, 0, 0), false, Light ());
+		for (int i = 0; i < 3; ++i) {
+			vertices [i] = vec4 (0, 0, 0, 0);
+			indices [i] = 0;
+		}
+		material = Material (vec3 (0, 0, 0));
 	}
-	Mesh (std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, Material _mat, bool _isLight = false, Light* _light = NULL) {
-		vertices = _vertices;
-		indices = _indices;
+	Mesh (vec4 (&_vertices) [3], const unsigned int (&_indices) [3], Material _mat, bool _isLight = false, Light* _light = NULL) {
+		for (int i = 0; i < 3; ++i) {
+			vertices [i] = _vertices [i];
+			indices [i] = _indices [i];
+		}
 		material = _mat;
 	}
 	Mesh (Light light) {
-		vertices = std::vector<Vertex> (0);
-		indices = std::vector<unsigned int> (0);
-		material = Material (vec3 (0, 0, 0), true, light);
+		for (int i = 0; i < 3; ++i) {
+			vertices [i] = vec4 (0, 0, 0, 0);
+			indices [i] = 0;
+		}
+		material = Material (vec3 (0, 0, 0), light);
 	}
 };
 

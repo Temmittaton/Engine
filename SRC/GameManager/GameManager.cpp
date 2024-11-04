@@ -20,9 +20,13 @@ void GameManager::Init () {
 	WorldActor* debugCamera = new Camera ();
 	currentWorld->AddWorldActor (debugCamera, vec3 (0, 0, 0));*/
 
-	WorldActor* debugLight = new WorldActor ();
-	debugLight->model.mesh.material = Material (vec3 (.6, 0, 0), true, Light (1, vec3 (1, 0, 0)));
-	currentWorld->AddWorldActor (debugLight, vec3 (-2, 3, 0));
+	WorldActor* debugWA = new WorldActor ();
+
+	vec4 _vertices [3] = {vec4 (0, 1, 0, 0), vec4 (-1, -1, 0, 0), vec4 (1, -1, 0, 0)};
+	unsigned int _indices [3] = {1, 2, 3};
+
+	debugWA->model.mesh = Mesh (_vertices, _indices, Material (vec3 (1, 0, 0), Light (.5, vec3 (1, 0, 1))));
+	currentWorld->AddWorldActor (debugWA, vec3 (0, 0, 0));
 }
 
 void GameManager::Frame () {

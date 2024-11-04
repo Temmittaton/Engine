@@ -21,13 +21,14 @@ struct Light {
 };
 struct Material {
 	vec3 color;
-	bool isLight;
+	int isLight;
 	Light light;
 };
 struct Mesh {
 	Material material;
-	vec3[32] vertices;
-	int[33] indices; // multiple of three
+	vec4[3] vertices;
+	uint[3] indices; // multiple of three
+	int padding;
 };
 struct Core {
 	vec3 position, scale;
@@ -144,9 +145,9 @@ HitInfo ObjectHit (Object object, Ray ray) {
 	HitInfo hit = NULL_HIT;
 
 	for (int i = 0; i < triangleNumber; i += 3) {
-		vec3 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [triangleNumber]];
-		vec3 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [triangleNumber + 1]];
-		vec3 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [triangleNumber + 2]];
+		vec3 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i]];
+		vec3 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 1]];
+		vec3 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 2]];
 		HitInfo _hit = TriangleHit (ray, v1, v2, v3);
 
 		if ((_hit.didHit) && (_hit.dist < hit.dist)) {
@@ -170,6 +171,7 @@ vec4 GetColor (Ray ray) {
 
 		for (int j = 0; j < objects.length (); j++) {
 			HitInfo _hit = ObjectHit (objects [j], ray);
+			if (_hit.didHit) {return vec4 (1, 0, 1, 1);}
 
 			if (_hit.dist < minDist) {
 				minDist = _hit.dist;
@@ -207,11 +209,16 @@ vec4 GetColor (Ray ray) {
 void main () {
 	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
-	float fov = 90 + 80 * sin (_Time);
+	float fov = 90 + 80 * sin (_Time * 16);
 	fov /= 90;
 
-	Ray _ray = Ray (vec3 (0, 0, -5), vec3 (uv.x * 16 * fov, uv.y * 9, 1));
+	Ray _ray = Ray (vec3 (0, 0, -5), (vec3 (uv.x * 16 * fov, uv.y * 9, 1)));
 	//Ray _ray = Ray (vec3 (0, 0, -5), vec3 (0, 0, 1));
 
-	color = clamp (GetColor (_ray), 0, 1);
+	//color = clamp (GetColor (_ray), 0, 1);
+	//color = vec4 (meshes [objects [0].meshIndex].material.color, 1); // texting mesh color
+	//color = vec4 (cores [objects [0].coreIndex].position, 1); // testing object position
+	//color = vec4 (meshes [objects [0].meshIndex].vertices [0], 1); // testing vertices
+	//color = vec4 (meshes [objects [0].meshIndex].indices [0], 0, 0, 1); // testing indexes
+	color = vec4 (meshes [0].vertices [0], 1); // testing indexes
 };
