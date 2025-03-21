@@ -2,14 +2,14 @@
 
 #define _CAMERA_
 
-#include "WorldActor.hpp"
+#include "Core.hpp"
+#include <glm/vec4.hpp>
 
-class WorldActor;
-
-class Camera : public WorldActor {
+class Camera {
 public :
 	// Attributes
-	int fov = 90;
+	glm::vec4 values; // Size in x, size in y, idk, idk
+	Core core;
 
 	// Constructors
 	Camera ();

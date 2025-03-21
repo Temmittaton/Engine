@@ -15,7 +15,7 @@ public :
 	// Attributes
 	glm::vec3 worldDimensions, chunkNumber;
 	unsigned int chunksDimensions, chunkLength;
-	WorldActor* mainCamera;
+	Camera* mainCamera;
 	std::vector<std::vector<WorldActor*>> worldActors;
 	glm::vec3 worldSkyColor;
 

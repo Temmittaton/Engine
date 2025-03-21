@@ -37,12 +37,6 @@ struct Object {
 	int coreIndex;
 	int meshIndex;
 };
-struct Camera {
-	vec3 pos;
-	vec3 forward;
-	float fov;
-};
-
 // Shader Structs
 struct Ray {
 	vec3 pos;
@@ -77,12 +71,14 @@ layout (std430, binding = 7) buffer LightIndexes {
 // Variables,
 uniform vec2 _WindowDimensions;
 uniform float _Time;
-uniform Camera _Camera;
+uniform vec3 _CameraPos;
+uniform vec3 _CameraForward;
+uniform vec4 _CameraValues;
 
 uniform vec4 _SkyColorZenith;
 
 const vec4 SkyColorHorizon = vec4 (.25, 1, .25, 1);
-const int MAX_BOUNCES = 1;
+const int MAX_BOUNCES = 8;
 
 // Methods
 Ray mirror (Ray ray, vec3 normal, vec3 origin) {
@@ -128,11 +124,12 @@ HitInfo TriangleHit(Ray ray, vec3 p0, vec3 p1, vec3 p2) {
 	HitInfo _hit = NULL_HIT;
 
     vec3 X = IntersectPlane(ray, p0, p1, p2);
-    _hit.didHit =  PointInTriangle(X, p0, p1, p2);
+    _hit.didHit = PointInTriangle(X, p0, p1, p2);
 	if (_hit.didHit) {
 		// If hit, fill hitinfo
 		_hit.normal = cross (p1 - p0, p2 - p0);
 		_hit.hitPoint = X;
+		_hit.dist = length (X - ray.pos);
 	}
 
 	return _hit;
@@ -143,13 +140,13 @@ HitInfo ObjectHit (Object object, Ray ray) {
 	int closestHitID = -1;
 	HitInfo hit = NULL_HIT;
 
-	for (int i = 0; i < triangleNumber; i += 3) {
-		vec4 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i]];
-		vec4 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 1]];
-		vec4 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [i + 2]];
-		HitInfo _hit = TriangleHit (ray, vec3(v1.x, v1.y, v1.z), vec3(v2.x, v2.y, v2.z), vec3(v3.x, v3.y, v3.z));
+	for (int i = 0; i < triangleNumber; i++) {
+		vec4 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [3 * i]];
+		vec4 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [3 * i + 1]];
+		vec4 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [3 * i + 2]];
+		HitInfo _hit = TriangleHit (ray, v1.xyz, v2.xyz, v3.xyz);
 
-		if ((_hit.didHit) && (_hit.dist < hit.dist)) {
+		if (_hit.dist < hit.dist) {
 			hit = _hit;
 			closestHitID = i;
 		}
@@ -161,7 +158,6 @@ HitInfo ObjectHit (Object object, Ray ray) {
 vec4 GetColor (Ray ray) {
 	vec4 _lights [MAX_BOUNCES];
 	Material _materials [MAX_BOUNCES];
-	vec4 _color = vec4 (0, 0, 0, 1);
 	int i = 0;
 
 	while (i < MAX_BOUNCES) {
@@ -170,7 +166,6 @@ vec4 GetColor (Ray ray) {
 
 		for (int j = 0; j < objects.length (); j++) {
 			HitInfo _hit = ObjectHit (objects [j], ray);
-			if (_hit.didHit) {return vec4 (1, 0, 1, 1);}
 
 			if (_hit.dist < minDist) {
 				minDist = _hit.dist;
@@ -181,7 +176,9 @@ vec4 GetColor (Ray ray) {
 		}
 
 		if (!hit.didHit) {
-			_color += GetEnvironmentLight (ray);
+			_lights [i] = vec4 (1, 1, 1, 1);
+			_materials [i] = Material (GetEnvironmentLight (ray), Light (vec4 (0), vec4 (1)));
+			i++;
 			break;
 		}
 		else {
@@ -194,9 +191,10 @@ vec4 GetColor (Ray ray) {
 	}
 
 	i--;
+	vec4 _color = vec4 (0, 0, 0, 1);
 
 	while (i >= 0) {
-		_color += _lights [i] * _materials [i].color;
+		_color += _lights [i] * _materials [i].color / (i + 1);
 
 		i--;
 	}
@@ -208,16 +206,28 @@ vec4 GetColor (Ray ray) {
 void main () {
 	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
-	float fov = 90 + 80 * sin (_Time * 16);
-	fov /= 90;
-
-	Ray _ray = Ray (vec3 (0, 0, -5), (vec3 (uv.x * 16 * fov, uv.y * 9, 1)));
+	Ray _ray = Ray (_CameraPos, (vec3 (uv.x * 16 * _CameraValues.x, uv.y * 9 * _CameraValues.y, 1)));
 	//Ray _ray = Ray (vec3 (0, 0, -5), vec3 (0, 0, 1));
 
-	//color = clamp (GetColor (_ray), 0, 1);
 	//color = vec4 (meshes [objects [0].meshIndex].material.color, 1); // texting mesh color
 	//color = vec4 (cores [objects [0].coreIndex].position, 1); // testing object position
-	//color = vec4 (meshes [objects [0].meshIndex].vertices [0], 1); // testing vertices
+	//color = meshes [objects [0].meshIndex].vertices [2]; // testing vertices
 	//color = vec4 (meshes [objects [0].meshIndex].indices [0], 0, 0, 1); // testing indexes
-	color = meshes [0].material.light.color;
+	//color = meshes [0].material.light.color;
+
+	/*vec4 p0 = meshes [objects [0].meshIndex].vertices [0];
+	vec4 p1 = meshes [objects [0].meshIndex].vertices [1];
+	vec4 p2 = meshes [objects [0].meshIndex].vertices [2];*/
+	//color = vec4 (IntersectPlane(_ray, p0.xyz, p1.xyz, p2.xyz) / 64, 1); test hit point on plane
+	//HitInfo _hit = TriangleHit (_ray, p0.xyz, p1.xyz, p2.xyz);
+	/*HitInfo _hit = ObjectHit (objects [0], _ray);
+
+	if (_hit.didHit) {
+		color = vec4 (1, 0, 0, 1);
+	}
+	else {
+		color = vec4 (0, 1, 0, 1);
+	}*/
+	
+	color = clamp (GetColor (_ray), 0, 1);
 };

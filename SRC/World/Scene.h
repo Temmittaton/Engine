@@ -2,6 +2,7 @@
 
 #define _SCENE_
 
+#include "../WorldActor/Camera.hpp"
 #include "../WorldActor/WorldActor.hpp"
 
 class WorldActor;
@@ -14,6 +15,17 @@ struct Object {
 		this->meshIndex = meshID;
 	}
 };
+struct ShaderCam {
+	vec3 pos;
+	vec3 forward;
+	vec4 values;
+
+	ShaderCam (Camera &camera) {
+		this->pos = camera.core.position;
+		this->forward = camera.core.forward ();
+		this->values = camera.values;
+	}
+};
 
 struct Scene {
 	unsigned int instanceNumber;
@@ -24,8 +36,9 @@ struct Scene {
 	Material* materials;
 	Object* instances;
 	unsigned int* lightIndexes; // two by two, first is linear index and second is index in chunk
+	ShaderCam* camera;
 
-	Scene (unsigned int instanceNumber, unsigned int meshNumber, unsigned int lightNumber) {
+	Scene (unsigned int instanceNumber, unsigned int meshNumber, unsigned int lightNumber, Camera &sceneCamera) {
 		this->instanceNumber = instanceNumber;
 		this->meshNumber = meshNumber;
 		this->lightNumber = lightNumber;
@@ -35,6 +48,8 @@ struct Scene {
 		materials = new Material [meshNumber];
 
 		lightIndexes = new unsigned int [lightNumber * 2];
+
+		camera = new ShaderCam (sceneCamera);
 	}
 
 	~Scene () {
@@ -43,6 +58,7 @@ struct Scene {
 		delete [] meshes;
 		delete [] materials;
 		delete [] lightIndexes;
+		delete camera;
 	}
 };
 

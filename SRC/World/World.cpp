@@ -55,7 +55,7 @@ struct Scene* World::GetSceneToRender () const {
 		}
 	}
 
-	Scene* _scene = new Scene (instanceNumber, meshNumber, lightNumber);
+	Scene* _scene = new Scene (instanceNumber, meshNumber, lightNumber, *mainCamera);
 	instanceNumber = 0;
 	lightNumber = 0;
 	meshNumber = 0;
