@@ -8,8 +8,8 @@ WorldActor::WorldActor (World& world) {
 
 	world.AddWorldActor (this, core.position);
 }
-WorldActor::WorldActor (World& world, vec3 position) {
-	core = Core (position, vec3 (0, 0, 0), vec3 (0, 0, 0));
+WorldActor::WorldActor (World& world, vec4 position) {
+	core = Core (position, vec4 (1, 1, 1, 0));
 }
 WorldActor::WorldActor (World& world, Core icore) {
 	core = icore;

@@ -8,57 +8,48 @@
 class WorldActor;
 
 struct Object {
-	int coreIndex, meshIndex;
+	int cID, mID;
 
-	Object (int coreID = -1, int meshID = -1) {
-		this->coreIndex = coreID;
-		this->meshIndex = meshID;
+	Object (int ID = -1) {
+		this->cID = ID;
+		this->mID = ID;
 	}
 };
-struct ShaderCam {
-	vec3 pos;
-	vec3 forward;
-	vec4 values;
+struct Material {
+	vec4 color, lightIntensity;
 
-	ShaderCam (Camera &camera) {
-		this->pos = camera.core.position;
-		this->forward = camera.core.forward ();
-		this->values = camera.values;
+	Material (vec4 col = vec4 (0,0,0,0), vec4 intensity = vec4 (0,0,0,0)) {
+		this->color = col;
+		this->lightIntensity = intensity;
+	}
+};
+struct ShaderCore {
+	vec4 position, scale;
+
+	ShaderCore (vec4 pos = vec4 (0,0,0,0), vec4 scale = vec4 (0,0,0,0)) {
+		this->position = pos;
+		this->scale = scale;
 	}
 };
 
 struct Scene {
 	unsigned int instanceNumber;
-	unsigned int meshNumber;
-	unsigned int lightNumber;
-	Core* cores;
-	Mesh* meshes;
+	ShaderCore* cores;
 	Material* materials;
 	Object* instances;
-	unsigned int* lightIndexes; // two by two, first is linear index and second is index in chunk
-	ShaderCam* camera;
+	Camera* camera;
 
-	Scene (unsigned int instanceNumber, unsigned int meshNumber, unsigned int lightNumber, Camera &sceneCamera) {
+	Scene (unsigned int instanceNumber) {
 		this->instanceNumber = instanceNumber;
-		this->meshNumber = meshNumber;
-		this->lightNumber = lightNumber;
 		instances = new Object [instanceNumber];
-		cores = new Core [instanceNumber];
-		meshes = new Mesh [meshNumber];
-		materials = new Material [meshNumber];
-
-		lightIndexes = new unsigned int [lightNumber * 2];
-
-		camera = new ShaderCam (sceneCamera);
+		cores = new ShaderCore [instanceNumber];
+		materials = new Material [instanceNumber];
 	}
 
 	~Scene () {
 		delete [] instances;
 		delete [] cores;
-		delete [] meshes;
 		delete [] materials;
-		delete [] lightIndexes;
-		delete camera;
 	}
 };
 

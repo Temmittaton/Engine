@@ -1,10 +1,10 @@
 #include "World.h"
 
 struct LightInfo {
-	std::vector<Light*> *lights;
+	std::vector<float> *lights;
 	vec3 skyColor;
 
-	LightInfo (std::vector<Light*> *_lights, vec3 _skyColor) {
+	LightInfo (std::vector<float> *_lights, vec3 _skyColor) {
 		lights = _lights;
 		skyColor = _skyColor;
 	}
@@ -36,49 +36,27 @@ World::~World () {
 // Methods
 struct Scene* World::GetSceneToRender () const {
 	unsigned int instanceNumber = 0; // need to add culling and optis soon this is terrible
-	unsigned int meshNumber = 0;
-	unsigned int lightNumber = 0;
 	unsigned int linearSize = (worldDimensions.x * worldDimensions.y * worldDimensions.z) / (chunksDimensions * chunksDimensions * chunksDimensions);
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
 				instanceNumber++;
-
-				if (worldActors [i][j]->model.mesh.material.light.intensity != vec4 (0)) {
-					lightNumber++;
-				}
-				if (worldActors [i][j]->model.mesh.vertices->length () != 0) {
-					meshNumber++;
-				}
 			}
 		}
 	}
 
-	Scene* _scene = new Scene (instanceNumber, meshNumber, lightNumber, *mainCamera);
+	Scene* _scene = new Scene (instanceNumber);
 	instanceNumber = 0;
-	lightNumber = 0;
-	meshNumber = 0;
+	_scene->camera = mainCamera;
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
-				int isLight = -1, hasMesh = -1;
-				if (worldActors [i][j]->model.mesh.material.light.intensity != vec4 (0)) {
-					_scene->lightIndexes [lightNumber] = i;
-					_scene->lightIndexes [lightNumber + 1] = j;
-					isLight = lightNumber;
-					lightNumber += 2;
-				}
-				if (worldActors [i][j]->model.mesh.vertices->length () != 0) {
-					_scene->meshes [meshNumber] = worldActors [i][j]->model.mesh;
-					_scene->materials [meshNumber] = worldActors [i][j]->model.mesh.material;
-					hasMesh = meshNumber;
-					meshNumber++;
-				}
+				_scene->cores [instanceNumber] = ShaderCore (worldActors [i][j]->core.position, worldActors [i][j]->core.scale);
+				_scene->materials [instanceNumber] = Material (worldActors [i][j]->model.color, worldActors [i][j]->model.lightIntensity);
 
-				_scene->instances [instanceNumber] = Object (instanceNumber, hasMesh);
-				_scene->cores [instanceNumber] = worldActors [i][j]->core;
+				_scene->instances [instanceNumber] = Object (instanceNumber);
 				instanceNumber++;
 			}
 		}
@@ -89,7 +67,7 @@ struct Scene* World::GetSceneToRender () const {
 
 struct ID* World::AddWorldActor (WorldActor* instance, vec3 pos) {
 	// Set instance to position (on sait jamais)
-	instance->core.position = pos;
+	instance->core.position = vec4 (pos.x, pos.y, pos.z, 0);
 
 	// Transform pos to positive space
 	vec3 pPos = (pos + worldDimensions) / vec3 (2);

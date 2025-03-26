@@ -12,31 +12,13 @@ void main () {
 
 #define FLT_MAX 3.402823466e+38
 #define FLT_MIN 1.175494351e-38
-#define NULL_HIT HitInfo (false, FLT_MAX, vec3(0), vec3(0), Material (vec4(0), Light (vec4(0), vec4 (0))))
+#define NULL_HIT HitInfo (false, FLT_MAX, vec3(0), vec3(0), Material (vec4(0), vec4(0)))
 
 // Object structs
-struct Light {
-	vec4 intensity;
-	vec4 color;
-};
-struct Material {
-	vec4 color;
-	Light light;
-};
-struct Mesh {
-	vec4[3] vertices;
-	uint[3] indices; // multiple of three
-	int padding;
-	Material material;
-};
-struct Core {
-	vec3 position, scale;
-	mat4 rotation;
-};
-struct Object {
-	int coreIndex;
-	int meshIndex;
-};
+struct Material {vec4 color, intensity;};
+struct Core {vec4 position, scale;};
+struct Object {int coreIndex, matIndex;};
+
 // Shader Structs
 struct Ray {
 	vec3 pos;
@@ -59,14 +41,8 @@ layout (std430, binding = 3) buffer ObjectBuffer {
 layout (std430, binding = 4) buffer CoreBuffer {
 	Core cores [];
 };
-layout (std430, binding = 5) buffer MeshBuffer {
-	Mesh meshes [];
-};
-layout (std430, binding = 6) buffer MaterialsBuffer {
+layout (std430, binding = 5) buffer MaterialsBuffer {
 	Material materials [];
-};
-layout (std430, binding = 7) buffer LightIndexes {
-	int lightIndexes [];
 };
 // Variables,
 uniform vec2 _WindowDimensions;
@@ -136,21 +112,9 @@ HitInfo TriangleHit(Ray ray, vec3 p0, vec3 p1, vec3 p2) {
 }
 
 HitInfo ObjectHit (Object object, Ray ray) {
-	int triangleNumber = meshes [object.meshIndex].indices.length () / 3;
-	int closestHitID = -1;
 	HitInfo hit = NULL_HIT;
 
-	for (int i = 0; i < triangleNumber; i++) {
-		vec4 v1 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [3 * i]];
-		vec4 v2 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [3 * i + 1]];
-		vec4 v3 = meshes [object.meshIndex].vertices [meshes [object.meshIndex].indices [3 * i + 2]];
-		HitInfo _hit = TriangleHit (ray, v1.xyz, v2.xyz, v3.xyz);
-
-		if (_hit.dist < hit.dist) {
-			hit = _hit;
-			closestHitID = i;
-		}
-	}
+	// to make for spheres
 	
 	return hit;
 }
@@ -171,13 +135,13 @@ vec4 GetColor (Ray ray) {
 				minDist = _hit.dist;
 				hit = _hit;
 
-				hit.material = meshes [objects [j].meshIndex].material;
+				hit.material = materials [objects [j].matIndex];
 			}
 		}
 
 		if (!hit.didHit) {
 			_lights [i] = vec4 (1, 1, 1, 1);
-			_materials [i] = Material (GetEnvironmentLight (ray), Light (vec4 (0), vec4 (1)));
+			_materials [i] = Material (GetEnvironmentLight (ray), vec4 (1));
 			i++;
 			break;
 		}

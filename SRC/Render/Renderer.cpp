@@ -175,18 +175,6 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         // SSBOs for WorldActors and Lights
         GLuint iSSBO, cSSBO, meSSBO, maSSBO, lSSBO;
         Scene* scene = gameManager->currentWorld->GetSceneToRender ();
-
-        /*int s1 = sizeof (scene->meshes);
-        int t = sizeof (*scene->meshes);
-        int s2 = sizeof (Mesh);
-        int s3 = sizeof (Material);
-        int s4 = sizeof (Light);*/
-
-        /*std::cout << "Size of Material: " << sizeof (Material) << std::endl;
-        std::cout << "Offset of vertices in Mesh: " << offsetof (Mesh, vertices) << std::endl;
-        std::cout << "Offset of indices in Mesh: " << offsetof (Mesh, indices) << std::endl;
-        std::cout << "Offset of padding in Mesh: " << offsetof (Mesh, padding) << std::endl;
-        std::cout << "Offset of Material in Mesh : " << offsetof (Mesh, material) << std::endl;*/
         
         glGenBuffers (1, &iSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, iSSBO);
@@ -196,39 +184,14 @@ void Renderer::RenderFrame (GameManager* gameManager) {
 
         glGenBuffers (1, &cSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, cSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Core), scene->cores, GL_STATIC_READ);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (ShaderCore), scene->cores, GL_STATIC_READ);
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 4, cSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         glGenBuffers (1, &meSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, meSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->meshNumber * sizeof (Mesh), scene->meshes, GL_DYNAMIC_DRAW);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Material), scene->materials, GL_DYNAMIC_DRAW);
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 5, meSSBO);
-        std::vector<Mesh> debugData (scene->meshNumber);
-        glGetBufferSubData (GL_SHADER_STORAGE_BUFFER, 0, scene->meshNumber * sizeof (Mesh), debugData.data ());
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
-
-        /*for (const auto& mesh : debugData) {
-            std::cout << "Material color: " << mesh.material.color.x << ", "
-                << mesh.material.color.y << ", " << mesh.material.color.z << std::endl;
-            std::cout << "Is material light: " << mesh.material.isLight << std::endl;
-            std::cout << "Light intensity: " << mesh.material.light.intensity << std::endl;
-
-            std::cout << "First vertex: " << mesh.vertices [0].x << ", "
-                << mesh.vertices [0].x << ", " << mesh.vertices [0].x << std::endl;
-            // Affiche d'autres champs si nécessaire
-        }*/
-
-        glGenBuffers (1, &maSSBO);
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, maSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->meshNumber * sizeof (Material), scene->materials, GL_STATIC_READ);
-        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 6, maSSBO);
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
-
-        glGenBuffers (1, &lSSBO);
-        glBindBuffer (GL_SHADER_STORAGE_BUFFER, lSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, 2 * scene->lightNumber * sizeof (int), scene->lightIndexes, GL_STATIC_READ);
-        glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 7, lSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 
         // Use the shader program
@@ -236,11 +199,13 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         glUniform2f (uniform_WindowSize, SCR_WIDTH, SCR_HEIGHT);
         glUniform1f (uniform_Time, gameManager->gameTime);
         glUniform4f (uniform_skyZenith, gameManager->currentWorld->worldSkyColor.x, gameManager->currentWorld->worldSkyColor.y, gameManager->currentWorld->worldSkyColor.z, 1.0);
-
-        glUniform3f (uniform_camPos, scene->camera->pos.x, scene->camera->pos.y, scene->camera->pos.z);
-        glUniform3f (uniform_camForward, scene->camera->forward.x, scene->camera->forward.y, scene->camera->forward.z);
-        glUniform4f (uniform_camValues, scene->camera->values.x, scene->camera->values.y, scene->camera->values.z, scene->camera->values.z);
-
+        
+        vec3 cam = scene->camera->core.position;
+        glUniform3f (uniform_camPos, cam.x, cam.y, cam.z);
+        cam = scene->camera->core.forward ();
+        glUniform3f (uniform_camForward, cam.x, cam.y, cam.z);
+        vec4 _cam = scene->camera->values;
+        glUniform4f (uniform_camValues, cam.x, cam.y, cam.z, cam.t);
         // Update quad
         UpdateQuadVertices (quad, SCR_WIDTH, SCR_HEIGHT);
         glBindVertexArray (VAO);

@@ -23,7 +23,7 @@ public :
 	// Constructors
 	WorldActor ();
 	WorldActor (World& world);
-	WorldActor (World& world, vec3 position);
+	WorldActor (World& world, vec4 position);
 	WorldActor (World& world, Core icore);
 	WorldActor (World& world, WorldActor& iparent);
 

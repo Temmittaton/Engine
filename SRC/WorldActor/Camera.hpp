@@ -3,7 +3,7 @@
 #define _CAMERA_
 
 #include "Core.hpp"
-#include <glm/vec4.hpp>
+#include <glm.hpp>
 
 class Camera {
 public :
