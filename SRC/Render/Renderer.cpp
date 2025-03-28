@@ -200,11 +200,11 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         glUniform1f (uniform_Time, gameManager->gameTime);
         glUniform4f (uniform_skyZenith, gameManager->currentWorld->worldSkyColor.x, gameManager->currentWorld->worldSkyColor.y, gameManager->currentWorld->worldSkyColor.z, 1.0);
         
-        vec3 cam = scene->camera->core.position;
-        glUniform3f (uniform_camPos, cam.x, cam.y, cam.z);
-        cam = scene->camera->core.forward ();
-        glUniform3f (uniform_camForward, cam.x, cam.y, cam.z);
-        vec4 _cam = scene->camera->values;
+        vec4 cam = scene->camera->core.position;
+        glUniform4f (uniform_camPos, cam.x, cam.y, cam.z, 0);
+        cam = vec4 (scene->camera->core.forward (), 0);
+        glUniform4f (uniform_camForward, cam.x, cam.y, cam.z, 0);
+        cam = scene->camera->values;
         glUniform4f (uniform_camValues, cam.x, cam.y, cam.z, cam.t);
         // Update quad
         UpdateQuadVertices (quad, SCR_WIDTH, SCR_HEIGHT);
