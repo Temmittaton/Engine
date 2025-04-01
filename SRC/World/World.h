@@ -27,7 +27,7 @@ public :
 
 	// Methods
 	struct Scene* GetSceneToRender () const;
-	struct ID* AddWorldActor (WorldActor* instance, glm::vec3 pos);
+	struct ID* AddWorldActor (WorldActor* instance);
 };
 
 #endif //_WORLD_

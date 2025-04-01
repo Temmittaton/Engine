@@ -5,8 +5,6 @@ WorldActor::WorldActor () {}
 
 WorldActor::WorldActor (World& world) {
 	core = Core ();
-
-	world.AddWorldActor (this, core.position);
 }
 WorldActor::WorldActor (World& world, vec4 position) {
 	core = Core (position, vec4 (1, 1, 1, 0));

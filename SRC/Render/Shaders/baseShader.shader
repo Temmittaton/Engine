@@ -12,7 +12,9 @@ void main () {
 
 #define FLT_MAX 3.402823466e+38
 #define FLT_MIN 1.175494351e-38
+#define EPSILON .0000000001
 #define NULL_HIT HitInfo (false, FLT_MAX, vec4(0), vec4(0), Material (vec4(0), vec4(0)))
+#define DOT2(V) dot (V,V)
 
 // Object structs
 struct Material {vec4 color, intensity;};
@@ -73,17 +75,17 @@ vec4 GetEnvironmentLight (Ray ray) {
 	return skyGradient;
 }
 
-vec4 GetLight (vec4 hitPoint) {
+vec4 GetLight (vec4 hitPoint, int hitID) {
+	vec4 light = materials [hitID].color * materials [hitID].intensity;
+	// To optimize
 
-	// To make
-
-	return vec4 (1, 1, 1, 1);
+	return vec4 (1);
 }
 
 // Collision functions
 HitInfo SphereHit (int ID, Ray ray) {
 	Core sphere = cores [ID];
-	HitInfo _hit = HitInfo (false, 0.0, vec4 (0), vec4 (0), Material (vec4 (0, 0, 0, 1), vec4 (0)));
+	HitInfo _hit = NULL_HIT;
 	vec4 offsetRayPos = (ray.pos - sphere.position);
 
 	float a = dot (ray.dir, ray.dir);
@@ -110,19 +112,21 @@ vec4 GetColor (Ray ray) {
 	vec4 _lights [MAX_BOUNCES];
 	Material _materials [MAX_BOUNCES];
 	int i = 0;
+	int lastHit = -1;
+	int newHit = -1;
 
 	while (i < MAX_BOUNCES) {
 		float minDist = FLT_MAX;
-		HitInfo hit;
+		HitInfo hit = NULL_HIT;
 
 		for (int j = 0; j < objects.length (); j++) {
+			if (j == lastHit) {continue;}
 			HitInfo _hit = SphereHit (j, ray);
 
 			if (_hit.dist < minDist) {
 				minDist = _hit.dist;
 				hit = _hit;
-
-				hit.material = materials [objects [j].matIndex];
+				newHit = j;
 			}
 		}
 
@@ -133,9 +137,11 @@ vec4 GetColor (Ray ray) {
 			break;
 		}
 		else {
-			_lights [i] = GetLight (hit.hitPoint);
+			lastHit = newHit;
+			_lights [i] = GetLight (hit.hitPoint, lastHit); // get light all around
 			_materials [i] = hit.material;
-			ray = mirror (ray, hit.normal, hit.hitPoint);
+			ray.dir = normalize (ray.dir);
+			ray = mirror (ray, hit.normal, hit.hitPoint + EPSILON * hit.normal); // send ray to precise location
 		}
 
 		i++;
@@ -153,14 +159,17 @@ vec4 GetColor (Ray ray) {
 	return _color;
 }
 
-// Main
+// Main 
 void main () {
 	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
 	vec4 rayDir = vec4 (uv.x * 16 * _CameraValues.x, uv.y * 9 * _CameraValues.y, 1, 0);
 	Ray _ray = Ray (_CameraPos, /*normalize*/ (rayDir));
 
-	
+	//color = materials [1].color;
+	//color = cores [1].position;
+	//color = vec4(uv.x, uv.y, 0, 1);
+	//color = rayDir;
 
 	color = clamp (GetColor (_ray), 0, 1);
 };

@@ -6,7 +6,8 @@
 
 class Core {
 public:
-	glm::vec4 position, scale;
+	glm::vec4 position; // The sphere's position in the world
+	glm::vec4 scale; // x is the sphere's radius, the others are unused for now
 
 	// Constructors
 	Core ();

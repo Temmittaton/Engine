@@ -65,9 +65,8 @@ struct Scene* World::GetSceneToRender () const {
 	return _scene;
 }
 
-struct ID* World::AddWorldActor (WorldActor* instance, vec3 pos) {
-	// Set instance to position (on sait jamais)
-	instance->core.position = vec4 (pos.x, pos.y, pos.z, 0);
+struct ID* World::AddWorldActor (WorldActor* instance) {
+	vec3 pos = instance->core.position;
 
 	// Transform pos to positive space
 	vec3 pPos = (pos + worldDimensions) / vec3 (2);
