@@ -15,13 +15,14 @@ GameManager::~GameManager () {
 // Methods
 void GameManager::Init () {
 	Camera* camera = new Camera ();
-	camera->values = vec4 (.1, .1, 0, 0);
+	camera->values = vec4 (1.6, .9, 0, 0);
+	camera->core.position = vec4 (0, 1, 0, 0);
 	currentWorld->mainCamera = camera;
 
 	// Player
 	WorldActor* playerPaddle = new WorldActor ();
 
-	playerPaddle->core = Core (vec4 (-0.5, 0, 1, 0), vec4 (.5, 0, 0, 0));
+	playerPaddle->core = Core (vec4 (-0.5, 1, 1, 0), vec4 (.5, 0, 0, 0));
 	playerPaddle->model = Model (vec4 (1, 0, 0, 1));
 
 	currentWorld->AddWorldActor (playerPaddle);
@@ -29,18 +30,18 @@ void GameManager::Init () {
 	// Ennemy
 	WorldActor* ennemyPaddle = new WorldActor ();
 
-	ennemyPaddle->core = Core (vec4 (0.5, -0.1, 1, 0), vec4 (.5, 0, 0, 0));
+	ennemyPaddle->core = Core (vec4 (0.5, .9, 1, 0), vec4 (.5, 0, 0, 0));
 	ennemyPaddle->model = Model (vec4 (0, 0, 1, 1));
 
 	currentWorld->AddWorldActor (ennemyPaddle);
 
-	// The sun
-	WorldActor* sun = new WorldActor ();
+	// Ground
+	WorldActor* ground = new WorldActor ();
 
-	sun->core = Core (vec4 (-64, 128, 256, 0), vec4 (16, 0, 0, 0));
-	sun->model = Model (vec4 (1, 1, 0, 1), vec4 (1));
+	ground->core = Core (vec4 (0, -256, 0, 0), vec4 (256, 0, 0, 0));
+	ground->model = Model (vec4 (.1, .1, .1, 1));
 
-	currentWorld->AddWorldActor (sun);
+	currentWorld->AddWorldActor (ground);
 }
 
 void GameManager::Frame () {

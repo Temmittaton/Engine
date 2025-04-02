@@ -12,7 +12,6 @@ void main () {
 
 #define FLT_MAX 3.402823466e+38
 #define FLT_MIN 1.175494351e-38
-#define EPSILON .0000000001
 #define NULL_HIT HitInfo (false, FLT_MAX, vec4(0), vec4(0), Material (vec4(0), vec4(0)))
 #define DOT2(V) dot (V,V)
 
@@ -54,11 +53,16 @@ uniform vec4 _CameraForward;
 uniform vec4 _CameraValues;
 
 uniform vec4 _SkyColorZenith;
+const vec4 sunPos = vec4 (-128, 128, 256, 0);
 
 const vec4 SkyColorHorizon = vec4 (.25, 1, .25, 1);
 const int MAX_BOUNCES = 8;
 
 // Methods
+vec4 lerp (vec4 a, vec4 b, float t) {
+	return (1.0 - t) * a + t * b;
+}
+
 Ray mirror (Ray ray, vec4 normal, vec4 origin) {
 	Ray _ray = Ray (origin, vec4 (0));
 
@@ -67,19 +71,37 @@ Ray mirror (Ray ray, vec4 normal, vec4 origin) {
 	return _ray;
 }
 
-vec4 GetEnvironmentLight (Ray ray) {
+Material GetEnvironmentLight (Ray ray) {
 	float skyGradientT = smoothstep (0.0, 0.4, ray.dir.y);
 	vec4 skyGradient = mix (SkyColorHorizon, _SkyColorZenith, skyGradientT);
-	// To make
+	// kinda done ig
+	float lum = max (dot (normalize (ray.dir), normalize (sunPos)), 0);
+	lum = pow (lum, 64) + .75;
 
-	return skyGradient;
+	return Material (skyGradient, vec4 (lum));
 }
 
-vec4 GetLight (vec4 hitPoint, int hitID) {
-	vec4 light = materials [hitID].color * materials [hitID].intensity;
+vec4 GetLight (vec4 point, vec4 normal, int hitID) {
+	vec4 light = vec4 (0);
 	// To optimize
+	float occlusion = 1.0;
+	vec4 lum = materials [hitID].color * materials [hitID].intensity;
+	for (int i = 0; i < objects.length (); i++) {
+		if (i == hitID) {continue;}
 
-	return vec4 (1);
+		float _dist = length (cores [hitID].position - cores [i].position);
+		_dist *= (dot (normalize (cores [hitID].position - cores [i].position), normal) + 1.0);
+		occlusion -= .1 * cores [i].scale.x / (_dist * _dist);
+
+		lum += materials [i].intensity / (_dist * _dist);
+	}
+
+	occlusion = .25 + .5 * max (occlusion, 0.0);
+	Material environnement = GetEnvironmentLight (Ray (point, normal));
+
+	light = lum + lerp (environnement.color * environnement.intensity, vec4 (1), occlusion);
+
+	return light * occlusion;
 }
 
 // Collision functions
@@ -131,17 +153,17 @@ vec4 GetColor (Ray ray) {
 		}
 
 		if (!hit.didHit) {
-			_lights [i] = vec4 (1, 1, 1, 1);
-			_materials [i] = Material (GetEnvironmentLight (ray), vec4 (1));
+			_materials [i] = GetEnvironmentLight (ray);
+			_lights [i] = _materials [i].intensity;
 			i++;
 			break;
 		}
 		else {
 			lastHit = newHit;
-			_lights [i] = GetLight (hit.hitPoint, lastHit); // get light all around
+			_lights [i] = GetLight (hit.hitPoint, hit.normal, lastHit); // get light all around
 			_materials [i] = hit.material;
 			ray.dir = normalize (ray.dir);
-			ray = mirror (ray, hit.normal, hit.hitPoint + EPSILON * hit.normal); // send ray to precise location
+			ray = mirror (ray, hit.normal, hit.hitPoint); // send ray to precise location
 		}
 
 		i++;
@@ -163,7 +185,7 @@ vec4 GetColor (Ray ray) {
 void main () {
 	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
-	vec4 rayDir = vec4 (uv.x * 16 * _CameraValues.x, uv.y * 9 * _CameraValues.y, 1, 0);
+	vec4 rayDir = vec4 (uv.x * _CameraValues.x, uv.y * _CameraValues.y, 1, 0);
 	Ray _ray = Ray (_CameraPos, /*normalize*/ (rayDir));
 
 	//color = materials [1].color;
