@@ -50,6 +50,8 @@ uniform vec2 _WindowDimensions;
 uniform float _Time;
 uniform vec4 _CameraPos;
 uniform vec4 _CameraForward;
+uniform vec4 _CameraRight;
+uniform vec4 _CameraUp;
 uniform vec4 _CameraValues;
 
 uniform vec4 _SkyColorZenith;
@@ -185,7 +187,8 @@ vec4 GetColor (Ray ray) {
 void main () {
 	vec2 uv = 2 * vec2 (gl_FragCoord.x / _WindowDimensions.x, gl_FragCoord.y / _WindowDimensions.y) - 1;
 
-	vec4 rayDir = vec4 (uv.x * _CameraValues.x, uv.y * _CameraValues.y, 1, 0);
+	//vec4 rayDir = vec4 (uv.x * _CameraValues.x, uv.y * _CameraValues.y, 1, 0);
+	vec4 rayDir = _CameraForward + _CameraRight * uv.x * _CameraValues.x + _CameraUp * uv.y * _CameraValues.y;
 	Ray _ray = Ray (_CameraPos, /*normalize*/ (rayDir));
 
 	//color = materials [1].color;

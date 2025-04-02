@@ -12,11 +12,6 @@ public:
 	// Constructors
 	Core ();
 	Core (glm::vec4 ipos, glm::vec4 iscale);
-
-	// Methods
-	glm::vec3 forward () const;
-	glm::vec3 up () const;
-	glm::vec3 right () const;
 };
 
 #endif //_CORE_

@@ -170,6 +170,8 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         int uniform_skyZenith = glGetUniformLocation (shader, "_SkyColorZenith");
         int uniform_camPos = glGetUniformLocation (shader, "_CameraPos");
         int uniform_camForward = glGetUniformLocation (shader, "_CameraForward");
+        int uniform_camRight = glGetUniformLocation (shader, "_CameraRight");
+        int uniform_camUp = glGetUniformLocation (shader, "_CameraUp");
         int uniform_camValues = glGetUniformLocation (shader, "_CameraValues");
 
         // SSBOs for WorldActors and Lights
@@ -202,8 +204,12 @@ void Renderer::RenderFrame (GameManager* gameManager) {
         
         vec4 cam = scene->camera->core.position;
         glUniform4f (uniform_camPos, cam.x, cam.y, cam.z, 0);
-        cam = vec4 (scene->camera->core.forward (), 0);
+        cam = scene->camera->forward ();
         glUniform4f (uniform_camForward, cam.x, cam.y, cam.z, 0);
+        cam = scene->camera->right ();
+        glUniform4f (uniform_camRight, cam.x, cam.y, cam.z, 0);
+        cam = scene->camera->up ();
+        glUniform4f (uniform_camUp, cam.x, cam.y, cam.z, 0);
         cam = scene->camera->values;
         glUniform4f (uniform_camValues, cam.x, cam.y, cam.z, cam.t);
         // Update quad
