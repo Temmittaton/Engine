@@ -192,7 +192,7 @@ void Renderer::RenderFrame (GameManager* gameManager) {
 
         glGenBuffers (1, &meSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, meSSBO);
-        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (Material), scene->materials, GL_DYNAMIC_DRAW);
+        glBufferData (GL_SHADER_STORAGE_BUFFER, scene->instanceNumber * sizeof (ShaderMaterial), scene->materials, GL_DYNAMIC_DRAW);
         glBindBufferBase (GL_SHADER_STORAGE_BUFFER, 5, meSSBO);
         glBindBuffer (GL_SHADER_STORAGE_BUFFER, 0);
 

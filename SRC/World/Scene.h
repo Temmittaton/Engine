@@ -15,12 +15,17 @@ struct Object {
 		this->mID = ID;
 	}
 };
-struct Material {
-	vec4 color, lightIntensity;
+struct ShaderMaterial {
+	vec3 color;
+	float roughness;
+	vec3 lightIntensity;
+	float opaqueness;
 
-	Material (vec4 col = vec4 (0,0,0,0), vec4 intensity = vec4 (0,0,0,0)) {
+	ShaderMaterial (vec3 col = vec3 (0,0,0), vec3 intensity = vec3 (0,0,0), float roughness = 1.0f, float opaqueness = 1.0f) {
 		this->color = col;
 		this->lightIntensity = intensity;
+		this->roughness = roughness;
+		this->opaqueness = opaqueness;
 	}
 };
 struct ShaderCore {
@@ -35,7 +40,7 @@ struct ShaderCore {
 struct Scene {
 	unsigned int instanceNumber;
 	ShaderCore* cores;
-	Material* materials;
+	ShaderMaterial* materials;
 	Object* instances;
 	Camera* camera;
 
@@ -43,7 +48,9 @@ struct Scene {
 		this->instanceNumber = instanceNumber;
 		instances = new Object [instanceNumber];
 		cores = new ShaderCore [instanceNumber];
-		materials = new Material [instanceNumber];
+		materials = new ShaderMaterial [instanceNumber];
+
+		camera = nullptr;
 	}
 
 	~Scene () {

@@ -54,7 +54,7 @@ struct Scene* World::GetSceneToRender () const {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
 				_scene->cores [instanceNumber] = ShaderCore (worldActors [i][j]->core.position, worldActors [i][j]->core.scale);
-				_scene->materials [instanceNumber] = Material (worldActors [i][j]->model.color, worldActors [i][j]->model.lightIntensity);
+				_scene->materials [instanceNumber] = ShaderMaterial (worldActors [i][j]->model.color, worldActors [i][j]->model.lightIntensity, worldActors [i][j]->model.roughness, worldActors [i][j]->model.opaqueness);
 
 				_scene->instances [instanceNumber] = Object (instanceNumber);
 				instanceNumber++;

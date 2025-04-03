@@ -16,6 +16,7 @@ GameManager::~GameManager () {
 void GameManager::Init () {
 	Camera* camera = new Camera ();
 	camera->values = vec4 (1.6, .9, 0, 0);
+	camera->rotation = vec4 (.5, 0, 0, 0);
 	camera->core.position = vec4 (0, 1, 0, 0);
 	currentWorld->mainCamera = camera;
 
@@ -26,6 +27,14 @@ void GameManager::Init () {
 	playerPaddle->model = Model (vec4 (1, 0, 0, 1));
 
 	currentWorld->AddWorldActor (playerPaddle);
+
+	// Nonreflectingball
+	WorldActor* ball = new WorldActor ();
+
+	ball->core = Core (vec4 (0, 1.5, .5, 0), vec4 (.25, 0, 0, 0));
+	ball->model = Model (vec4 (1, 0, 0, 1), vec4 (0), 0.4f, 1.0f);
+
+	currentWorld->AddWorldActor (ball);
 
 	// Ennemy
 	WorldActor* ennemyPaddle = new WorldActor ();
@@ -39,7 +48,7 @@ void GameManager::Init () {
 	WorldActor* ground = new WorldActor ();
 
 	ground->core = Core (vec4 (0, -256, 0, 0), vec4 (256, 0, 0, 0));
-	ground->model = Model (vec4 (.1, .1, .1, 1));
+	ground->model = Model (vec4 (.1, .1, .1, 1), vec4 (0), 1.0f, 0.2f);
 
 	currentWorld->AddWorldActor (ground);
 }

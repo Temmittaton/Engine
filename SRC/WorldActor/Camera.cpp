@@ -3,10 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-const glm::mat4 rX (float angle) {
-	return glm::mat4 ();
-}
-
 // Contructor
 Camera::Camera () {
 	values = glm::vec4 (1, 1, 0, 0);
