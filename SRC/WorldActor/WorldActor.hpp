@@ -14,6 +14,7 @@ struct ID;
 class WorldActor {
 public :
 	// Attributes
+	World* world;
 	Core core;
 	Model model;
 	WorldActor* parent;
@@ -22,10 +23,10 @@ public :
 
 	// Constructors
 	WorldActor ();
-	WorldActor (World& world);
-	WorldActor (World& world, vec4 position);
-	WorldActor (World& world, Core icore);
-	WorldActor (World& world, WorldActor& iparent);
+	WorldActor (World* world);
+	WorldActor (World* world, vec4 position);
+	WorldActor (World* world, Core icore);
+	WorldActor (World* world, WorldActor& iparent);
 
 	// Destructor
 	~WorldActor ();
@@ -33,7 +34,7 @@ public :
 	// Methods
 	void AddChild (WorldActor* child);
 	WorldActor* GetParent ();
-	void Move (vec3 movement);
+	bool Move (vec3 movement);
 };
 
 #endif //_WORLDACTOR_

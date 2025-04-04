@@ -14,7 +14,7 @@ class World {
 public :
 	// Attributes
 	glm::vec3 worldDimensions, chunkNumber;
-	unsigned int chunksDimensions, chunkLength;
+	unsigned int chunksDimensions, chunkLength, linearSize;
 	Camera* mainCamera;
 	std::vector<std::vector<WorldActor*>> worldActors;
 	glm::vec3 worldSkyColor;
@@ -28,6 +28,7 @@ public :
 	// Methods
 	struct Scene* GetSceneToRender () const;
 	struct ID* AddWorldActor (WorldActor* instance);
+	float GetCollision (ID id, vec3 move);
 };
 
 #endif //_WORLD_

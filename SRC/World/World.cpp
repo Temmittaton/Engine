@@ -23,9 +23,13 @@ World::World (vec3 worldSize, unsigned int chunkSize, unsigned int chunkLength, 
 	chunkNumber.y = (int)chunkNumber.y;
 	chunkNumber.z = (int)chunkNumber.z;
 
+	linearSize = (worldDimensions.x * worldDimensions.y * worldDimensions.z) / (chunksDimensions * chunksDimensions * chunksDimensions);
+
 	worldActors = std::vector<std::vector<WorldActor*>> (chunkNumber[0] * chunkNumber [1] * chunkNumber [2], std::vector<WorldActor*> (chunkLength));
 
 	worldSkyColor = skyColor;
+
+	mainCamera = nullptr;
 }
 
 // Destructor
@@ -36,7 +40,6 @@ World::~World () {
 // Methods
 struct Scene* World::GetSceneToRender () const {
 	unsigned int instanceNumber = 0; // need to add culling and optis soon this is terrible
-	unsigned int linearSize = (worldDimensions.x * worldDimensions.y * worldDimensions.z) / (chunksDimensions * chunksDimensions * chunksDimensions);
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
@@ -93,4 +96,50 @@ struct ID* World::AddWorldActor (WorldActor* instance) {
 	ID _id = ID (chunk, worldActors [linearIndex].size () - 1);
 	instance->id = &_id;
 	return &_id;
+}
+
+float World::GetCollision (ID id, vec3 move) {
+	float t = -1.0f;
+
+	vec3 p1 = worldActors [id.linearID][id.nID]->core.position;
+	float r1 = worldActors [id.linearID][id.nID]->core.scale.x;
+	float a = move.x * move.x + move.y * move.y + move.z * move.z;
+
+	for (int i = 0; i < linearSize; i++) {
+		for (int j = 0; j < (int)(chunkLength); j++) {
+			if (worldActors [i][j] == NULL) {continue;}
+			vec3 p2 = worldActors [i][j]->core.position;
+			float r = r1 + worldActors [i][j]->core.scale.x;
+				
+			float halfB = (p1.x - p2.x) * move.x + (p1.y - p2.y) * move.y + (p1.z - p2.z) * move.z;
+			float c = p1.x * p1.x + p2.x * p2.x + p1.y * p1.y + p2.y * p2.y + p1.z * p1.z + p2.z * p2.z - 2 * (p1.x*p2.x+p1.y*p2.y+p1.z*p2.z) - r * r;
+			float deltaFourth = halfB * halfB - a * c;
+
+			// If no collision, return -1.
+			if (deltaFourth < 0.0f) {
+				t = max (t, -1.0f);
+				continue;
+			}
+
+			float t1 = (-2 * halfB - sqrt (4 * deltaFourth)) / (2 * a);
+			float t2 = (-2 * halfB + sqrt (4 * deltaFourth)) / (2 * a);
+
+			if (t1 >= 0.0f && t1 < 1.0f) {
+				if (t2 >= 0.0f && t2 < 1.0f) {
+					t = min (t, min (t1, t2));
+				}
+				else {
+					t = min (t, t1);
+				}
+			}
+			else if (t2 >= 0.0f && t2 < 1.0f) {
+				t = min (t, t2);
+			}
+			else {
+				t = max (t, -1.0f);
+			}
+		}
+	}
+
+	return t;
 }
