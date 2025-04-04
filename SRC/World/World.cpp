@@ -30,6 +30,8 @@ World::World (vec3 worldSize, unsigned int chunkSize, unsigned int chunkLength, 
 	worldSkyColor = skyColor;
 
 	mainCamera = nullptr;
+
+	instanceNumber = 0;
 }
 
 // Destructor
@@ -39,29 +41,32 @@ World::~World () {
 
 // Methods
 struct Scene* World::GetSceneToRender () const {
-	unsigned int instanceNumber = 0; // need to add culling and optis soon this is terrible
+	unsigned int instancesToRender = instanceNumber; // need to add culling and optis soon this is terrible
+	unsigned int n = 0;
 
-	for (int i = 0; i < linearSize; i++) {
+	/*for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
 			if (worldActors [i][j] != NULL) {
-				instanceNumber++;
+				instancesToRender++;
 			}
 		}
-	}
+	}*/
 
-	Scene* _scene = new Scene (instanceNumber);
-	instanceNumber = 0;
+	Scene* _scene = new Scene (instancesToRender);
+	instancesToRender = 0;
 	_scene->camera = mainCamera;
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
-			if (worldActors [i][j] != NULL) {
-				_scene->cores [instanceNumber] = ShaderCore (worldActors [i][j]->core.position, worldActors [i][j]->core.scale);
-				_scene->materials [instanceNumber] = ShaderMaterial (worldActors [i][j]->model.color, worldActors [i][j]->model.lightIntensity, worldActors [i][j]->model.roughness, worldActors [i][j]->model.opaqueness);
+			if (n > instanceNumber) { break; };
+			if (worldActors [i][j] == NULL) {continue;}
 
-				_scene->instances [instanceNumber] = Object (instanceNumber);
-				instanceNumber++;
-			}
+			_scene->cores [instancesToRender] = ShaderCore (worldActors [i][j]->core.position, worldActors [i][j]->core.scale);
+			_scene->materials [instancesToRender] = ShaderMaterial (worldActors [i][j]->model.color, worldActors [i][j]->model.lightIntensity, worldActors [i][j]->model.roughness, worldActors [i][j]->model.opaqueness);
+
+			_scene->instances [instancesToRender] = Object (instancesToRender);
+			instancesToRender++;
+			n++; // end search if searched every instance
 		}
 	}
 
@@ -69,9 +74,10 @@ struct Scene* World::GetSceneToRender () const {
 }
 
 struct ID* World::AddWorldActor (WorldActor* instance) {
-	vec3 pos = instance->core.position;
+	instanceNumber++;
 
 	// Transform pos to positive space
+	vec3 pos = instance->core.position;
 	vec3 pPos = (pos + worldDimensions) / vec3 (2);
 
 	vec3 chunk = (pPos / vec3 (chunksDimensions));
@@ -100,6 +106,7 @@ struct ID* World::AddWorldActor (WorldActor* instance) {
 
 float World::GetCollision (ID id, vec3 move) {
 	float t = -1.0f;
+	unsigned int n = 0;
 
 	vec3 p1 = worldActors [id.linearID][id.nID]->core.position;
 	float r1 = worldActors [id.linearID][id.nID]->core.scale.x;
@@ -107,7 +114,10 @@ float World::GetCollision (ID id, vec3 move) {
 
 	for (int i = 0; i < linearSize; i++) {
 		for (int j = 0; j < (int)(chunkLength); j++) {
-			if (worldActors [i][j] == NULL) {continue;}
+			if (n > instanceNumber) { break; };
+			if (worldActors [i][j] == NULL) { continue; }
+			n++; // end search if searched every instance
+
 			vec3 p2 = worldActors [i][j]->core.position;
 			float r = r1 + worldActors [i][j]->core.scale.x;
 				
